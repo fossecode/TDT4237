@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" href="/css/style.css"/>
+
+        {% set titleVar = 'Health Forum' %}
+
+        <title>{{ title|default(titleVar) }}</title>
+        <script src="/js/app.js"></script>
+        <script>
+        </script>
+    </head>
+    <body>
+        <div id="logo">
+            <a href="/">
+                <img src="/images/helseweb.jpg">
+                <h1>{{ title|default(titleVar) }}</h1>
+            </a>
+        </div>
+
+        <div id="container">
+            <div id="navbar">
+                {% if isLoggedIn %}
+                    Logged in as {{ loggedInUsername }}.<br>
+                    <a href ="{{ urlFor('showposts') }}"> Show posts</a> <br>
+                    <a href="{{ urlFor('editprofile') }}">Edit profile</a> <br>
+                    <a href="{{ urlFor('createpost') }}"> Create new post</a><br>
+                    <a href="{{ urlFor('logout') }}">Log out</a> <br>
+                {% else %}
+                    <a href="{{ urlFor('newuser') }}">Create user</a> <br />
+                    <a href="/login">Login</a> <br>
+
+                {% endif %}
+
+                {% if isAdmin %}
+                    <a href="{{ urlFor('admin') }}">Admin section</a> <br>
+                {% endif %}
+
+                <br>
+
+                <a href="/users">All users (DEBUG FEATURE) </a> <br>
+            </div>
+
+            <div id="content">
+                <div id="flashinfo">{{ flash.info|raw }}</div>
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+
+        <div id="footer">
+            {% block footer %}here be footer{% endblock %}
+        </div>
+    </body>
+</html>

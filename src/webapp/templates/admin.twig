@@ -1,0 +1,42 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+
+<h2>Admin section</h2>
+
+{% if users %}
+    <table>
+    <tr>
+        <th>Id</th>
+        <th>Username</th>
+    </tr>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.userid|raw }}</td>
+            <td><a href="/user/{{ user.username|raw }}">{{ user.username|raw }}</a></td>
+            <td><a href="/admin/delete/{{ user.username|raw }}">Delete this user</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    The users table is empty.
+{% endif %}
+
+{% if posts %}
+    <table>
+        <tr>
+            <th> Id</th>
+            <th> Title</th>
+        </tr>
+        {% for post in posts %}
+        <tr>
+            <td><a href="/posts/{{ post.postid|raw }}">{{ post.title }}</a></td>
+            <td><a href="/admin/delete/post/{{ post.postid|raw }}">Delete this post</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    There are no posts
+{% endif %}
+
+{% endblock %}

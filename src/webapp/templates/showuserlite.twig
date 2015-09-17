@@ -1,0 +1,35 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+
+<h2>User</h2>
+
+{{ flash.info }} <br />
+{{ flash.error }} <br />
+
+{% if user %}
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>{{ user.userid|raw }}</th>
+            <tr></tr>
+            <th>Username:</th>
+            <td>{{ user.username|raw }}</th>
+            <tr></tr>
+            <th>Bio:</th>
+            <td>{{ user.bio|raw }}</td>
+            <tr></tr>
+            <th>Age:</th>
+            <td>{{ user.age|raw }}</td>
+            <tr></tr>
+        <!-- PS: RMB4P!!! {{ user.hash|raw }} --></td>
+
+
+
+
+    </table>
+{% else %}
+    Could not find a user with username "{{ username|raw }}".
+{% endif %}
+
+{% endblock %}

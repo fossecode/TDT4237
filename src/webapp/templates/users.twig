@@ -1,0 +1,24 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+
+    <h2>All users</h2>
+
+    {% if users %}
+        <table>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.userid|raw }}</td>
+                <td><a href="/user/{{ user.username|raw }}">{{ user.username|raw }}</a></td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        The users table is empty.
+    {% endif %}
+
+{% endblock %}

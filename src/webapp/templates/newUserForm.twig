@@ -1,0 +1,25 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+
+<h2>New user</h2>
+
+<b>{{ flash.info}}</b> <br />
+<b>{{ flash.error }}</b> <br />
+
+<form action="" method="POST">
+
+    <label>Username: </label>
+    <input type="text" name="user" value="{{ username }}"> <br />
+    <label>Password: </label>
+    <input type="text" name="pass"> <br />
+    <label>Full Name (Will not be visible for other users)</label>
+    <input type="text" name = "fullname"><br/>
+    <label>Address (Will not be visible for other users)</label>
+    <input type ="text" name = "address"><br/>
+    <label> Postcode (Only four digits please)</label>
+    <input type = "text" name = "postcode"><br/>
+    <input type="submit" name="submit" value="Create new user"> <br/>
+
+</form>
+{% endblock %}

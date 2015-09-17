@@ -1,0 +1,30 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+
+    <h2>Edit profile</h2>
+
+    <form action="" method="POST">
+        <div id="flasherror">{{ flash.error }}</div>
+
+        <label>Full name:</label>
+        <input type = "text" name="fullname" value= "{{ user.fullname }}"> <br />
+
+        <label>Address:</label>
+        <input type = "text" name="address" value= "{{ user.address }}"> <br />
+
+        <label>Postcode:</label>
+        <input type = "text" name="postcode"  value= "{{ user.postcode }}"> <br />
+
+        <label>Email:</label>
+        <input type="text" name="email" value="{{ user.email|raw}}"> <br />
+
+        <label>Bio:</label>
+        <textarea name="bio">{{ user.bio }}</textarea>
+
+        <label>Age:</label>
+        <input type="text" name="age" value="{{ user.age }}"> <br />
+
+        <input type="submit" name="submit" value="Save profile">
+    </form>
+{% endblock %}
