@@ -15,7 +15,7 @@ class UserRepository
     const FIND_BY_NAME   = "SELECT * FROM users WHERE user='%s'";
     const DELETE_BY_NAME = "DELETE FROM users WHERE user='%s'";
     const SELECT_ALL     = "SELECT * FROM users";
-    const FIND_FULL_NAME   = "SELECT * FROM users WHERE user='%s'";
+    const FIND_FULL_NAME = "SELECT * FROM users WHERE user='%s'";
 
     /**
      * @var PDO
