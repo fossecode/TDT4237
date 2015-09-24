@@ -13,8 +13,8 @@
     {% for user in users %}
         <tr>
             <td>{{ user.userid|raw }}</td>
-            <td><a href="/user/{{ user.username|raw }}">{{ user.username|raw }}</a></td>
-            <td><a href="/admin/delete/{{ user.username|raw }}">Delete this user</a></td>
+            <td><a href="/user/{{ user.userid|raw }}">{{ user.username|raw }}</a></td>
+            <td><a href="/admin/delete/{{ user.userid|raw }}">Delete this user</a></td>
         </tr>
     {% endfor %}
     </table>
@@ -25,12 +25,14 @@
 {% if posts %}
     <table>
         <tr>
-            <th> Id</th>
+            <th> ID</th>
             <th> Title</th>
+            <th></th>
         </tr>
         {% for post in posts %}
         <tr>
-            <td><a href="/posts/{{ post.postid|raw }}">{{ post.title }}</a></td>
+            <td>{{ post.postId|raw }}</td>
+            <td><a href="/posts/{{ post.postId|raw }}">{{ post.title }}</a></td>
             <td><a href="/admin/delete/post/{{ post.postid|raw }}">Delete this post</a></td>
         </tr>
         {% endfor %}

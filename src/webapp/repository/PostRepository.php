@@ -8,60 +8,63 @@ use tdt4237\webapp\models\PostCollection;
 
 class PostRepository
 {
+    const SELECT_POST = "SELECT * FROM posts NATURAL JOIN users WHERE postId = ?;";
+    const ALL_POSTS = "SELECT * FROM posts NATURAL JOIN users;";
+    const DELETE_POST = "DELETE FROM posts WHERE postId = ?;";
+    const INSERT_POST = "INSERT INTO posts (title, authorId, content, date) VALUES (?,?,?,?)";
 
     /**
      * @var PDO
      */
-    private $db;
+    private $pdo;
 
-    public function __construct(PDO $db)
+    public function __construct(PDO $pdo)
     {
-        $this->db = $db;
+        $this->pdo = $pdo;
     }
     
-    public static function create($id, $author, $title, $content, $date)
+    public static function create($id, $authorId, $title, $content, $date, $author)
     {
         $post = new Post;
         
         return $post
             ->setPostId($id)
-            ->setAuthor($author)
+            ->setAuthorId($authorId)
             ->setTitle($title)
             ->setContent($content)
-            ->setDate($date);
+            ->setDate($date)
+            ->setAuthor($author);
     }
 
     public function find($postId)
     {
-        $sql  = "SELECT * FROM posts WHERE postId = $postId";
-        $result = $this->db->query($sql);
-        $row = $result->fetch();
+        $stmt = $this->pdo->prepare(self::SELECT_POST);
+        $stmt->execute(array($postId));
+        $rows = $stmt->fetch();
 
-        if($row === false) {
+        if($rows === false) {
             return false;
         }
-
-
-        return $this->makeFromRow($row);
+        return $this->makeFromRow($rows);
     }
 
     public function all()
     {
-        $sql   = "SELECT * FROM posts";
-        $results = $this->db->query($sql);
+        $stmt = $this->pdo->prepare(self::ALL_POSTS);
+        $stmt->execute(array());
+        $rows = $stmt->fetchAll();
 
-        if($results === false) {
+        if($rows === false) {
             return [];
             throw new \Exception('PDO error in posts all()');
         }
 
-        $fetch = $results->fetchAll();
-        if(count($fetch) == 0) {
+        if(count($rows) == 0) {
             return false;
         }
 
         return new PostCollection(
-            array_map([$this, 'makeFromRow'], $fetch)
+            array_map([$this, 'makeFromRow'], $rows)
         );
     }
 
@@ -69,35 +72,32 @@ class PostRepository
     {
         return static::create(
             $row['postId'],
-            $row['author'],
+            $row['authorId'],
             $row['title'],
             $row['content'],
-            $row['date']
+            $row['date'],
+            $row['user']
         );
-
-       //  $this->db = $db;
     }
 
     public function deleteByPostid($postId)
     {
-        return $this->db->exec(
-            sprintf("DELETE FROM posts WHERE postid='%s';", $postId));
+        $stmt = $this->pdo->prepare(self::DELETE_POST);
+        return $stmt->execute(array($postId));
     }
 
 
     public function save(Post $post)
     {
         $title   = $post->getTitle();
-        $author = $post->getAuthor();
+        $authorId = $post->getAuthorId();
         $content = $post->getContent();
         $date    = $post->getDate();
 
         if ($post->getPostId() === null) {
-            $query = "INSERT INTO posts (title, author, content, date) "
-                . "VALUES ('$title', '$author', '$content', '$date')";
+            $stmt = $this->pdo->prepare(self::INSERT_POST);
+            return $stmt->execute(array($title, $authorId, $content, $date));
         }
-
-        $this->db->exec($query);
-        return $this->db->lastInsertId();
+        return $this->pdo->lastInsertId();
     }
 }

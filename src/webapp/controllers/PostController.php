@@ -19,9 +19,9 @@ class PostController extends Controller
     public function index()
     {
         $posts = $this->postRepository->all();
-
         $posts->sortByDate();
         $this->render('posts.twig', ['posts' => $posts]);
+
     }
 
     public function show($postId)
@@ -38,9 +38,6 @@ class PostController extends Controller
 
         }
 
-
-
-
         $this->render('showpost.twig', [
             'post' => $post,
             'comments' => $comments,
@@ -55,9 +52,11 @@ class PostController extends Controller
         if(!$this->auth->guest()) {
 
             $comment = new Comment();
+            //The shit below must be changed to use ID and authentication.
             $comment->setAuthor($_SESSION['user']);
+            $comment->setAuthorId($this->userRepository->findByUser($comment->getAuthor())->getUserId());
             $comment->setText($this->app->request->post("text"));
-            $comment->setDate(date("dmY"));
+            $comment->setDate(date ("Y-m-d H:i:s"));
             $comment->setPost($postId);
             $this->commentRepository->save($comment);
             $this->app->redirect('/posts/' . $postId);
@@ -92,13 +91,14 @@ class PostController extends Controller
             $request = $this->app->request;
             $title = $request->post('title');
             $content = $request->post('content');
-            $author = $request->post('author');
-            $date = date("dmY");
+            $author = $this->userRepository->findByUser($request->post('author'));
+            $date = date("Y-m-d H:i:s");
 
-            $validation = new PostValidation($title, $author, $content);
+            $validation = new PostValidation($title, $author->getUsername(), $content);
             if ($validation->isGoodToGo()) {
                 $post = new Post();
-                $post->setAuthor($author);
+                $post->setAuthor($author->getUsername());
+                $post->setAuthorId($author->getUserId());
                 $post->setTitle($title);
                 $post->setContent($content);
                 $post->setDate($date);

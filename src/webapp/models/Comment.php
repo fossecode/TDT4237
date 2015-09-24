@@ -12,6 +12,7 @@ class Comment
 {
     protected $commentId;
     protected $author;
+    protected $authorId;
     protected $text;
     protected $date;
     protected $belongs_to_post;
@@ -33,6 +34,15 @@ class Comment
 
     public function setAuthor($author) {
         $this->author = $author;
+        return $this;
+    }
+
+    public function getAuthorId() {
+        return $this->authorId;
+    }
+
+    public function setAuthorId($authorId) {
+        $this->authorId = $authorId;
         return $this;
     }
 
@@ -63,10 +73,4 @@ class Comment
         return $this;
 
     }
-
-
-
-
-
-
 }

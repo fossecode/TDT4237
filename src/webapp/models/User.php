@@ -13,8 +13,7 @@ class User
     protected $hash;
     protected $email   = null;
     protected $bio     = 'Bio is empty.';
-    protected $age;
-    protected $bankcard;
+    protected $age = null;
     protected $isAdmin = 0;
 
     function __construct($username, $hash, $fullname, $address, $postcode)

@@ -10,7 +10,7 @@ class Age
     public function __construct($age)
     {
         if (! $this->isHuman($age)) {
-            throw new \Exception("Age must be inside the 0-130 range");
+            throw new \Exception("Age must be between 0 and 130");
         }
         
         $this->age = $age;

@@ -13,7 +13,7 @@
         {% for user in users %}
             <tr>
                 <td>{{ user.userid|raw }}</td>
-                <td><a href="/user/{{ user.username|raw }}">{{ user.username|raw }}</a></td>
+                <td><a href="/user/{{ user.userid|raw }}">{{ user.username|raw }}</a></td>
             </tr>
         {% endfor %}
         </table>

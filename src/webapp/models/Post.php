@@ -15,7 +15,7 @@ class Post
     protected $title;
     protected $content;
     protected $date;
-
+    protected $authorId;
 
     public function getPostId() {
         return $this->postId;
@@ -33,6 +33,15 @@ class Post
 
     public function setAuthor($author) {
         $this->author = $author;
+        return $this;
+    }
+
+    public function getAuthorId() {
+        return $this->authorId;
+    }
+
+    public function setAuthorId($authorId) {
+        $this->authorId = $authorId;
         return $this;
     }
 
@@ -62,10 +71,4 @@ class Post
     public function getTitle() {
         return $this->title;
     }
-
-
-
-
-
-
 }

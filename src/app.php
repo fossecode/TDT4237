@@ -71,7 +71,7 @@ $app->post('/forgot/:username', $ns . 'ForgotPasswordController:confirm');
 $app->post('/forgot', $ns . 'ForgotPasswordController:submitName');
 
 // Show a user by name
-$app->get('/user/:username', $ns . 'UserController:show')->name('showuser');
+$app->get('/user/:userId', $ns . 'UserController:show')->name('showuser');
 
 // Show all users
 $app->get('/users', $ns . 'UserController:all');
@@ -91,7 +91,7 @@ $app->get('/logout', $ns . 'UserController:logout')->name('logout');
 // Admin restricted area
 $app->get('/admin', $ns . 'AdminController:index')->name('admin');
 $app->get('/admin/delete/post/:postid', $ns . 'AdminController:deletepost');
-$app->get('/admin/delete/:username', $ns . 'AdminController:delete');
+$app->get('/admin/delete/:userId', $ns . 'AdminController:delete');
 
 
 return $app;

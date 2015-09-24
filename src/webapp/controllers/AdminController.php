@@ -31,21 +31,21 @@ class AdminController extends Controller
         $this->render('admin.twig', $variables);
     }
 
-    public function delete($username)
+    public function delete($userId)
     {
-        if ($this->userRepository->deleteByUsername($username) === 1) {
-            $this->app->flash('info', "Sucessfully deleted '$username'");
+        if ($this->userRepository->deleteByUserId($userId)) {
+            $this->app->flash('info', "Sucessfully deleted user.");
             $this->app->redirect('/admin');
             return;
         }
         
-        $this->app->flash('info', "An error ocurred. Unable to delete user '$username'.");
+        $this->app->flash('info', "An error ocurred. Unable to delete user.");
         $this->app->redirect('/admin');
     }
 
     public function deletePost($postId)
     {
-        if ($this->postRepository->deleteByPostid($postId) === 1) {
+        if ($this->postRepository->deleteByPostid($postId)) {
             $this->app->flash('info', "Sucessfully deleted '$postId'");
             $this->app->redirect('/admin');
             return;

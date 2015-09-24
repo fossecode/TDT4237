@@ -67,26 +67,28 @@ class UserController extends Controller
         $this->app->redirect("/");
     }
 
-    public function show($username)
+    public function show($userId)
     {
         if ($this->auth->guest()) {
             $this->app->flash("info", "You must be logged in to do that");
             $this->app->redirect("/login");
 
         } else {
-            $user = $this->userRepository->findByUser($username);
+            $user = $this->userRepository->findByUserId($userId);
+
+            //The following doesnt check enough.
 
             if ($user != false && $user->getUsername() == $this->auth->getUsername()) {
 
                 $this->render('showuser.twig', [
                     'user' => $user,
-                    'username' => $username
+                    'username' => $user->getUsername()
                 ]);
             } else if ($this->auth->check()) {
 
                 $this->render('showuserlite.twig', [
                     'user' => $user,
-                    'username' => $username
+                    'username' => $user->getUsername()
                 ]);
             }
         }

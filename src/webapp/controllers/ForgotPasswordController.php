@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Daniel
- * Date: 30.08.2015
- * Time: 00:07
- */
-
 namespace tdt4237\webapp\controllers;
 
 
