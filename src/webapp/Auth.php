@@ -29,7 +29,7 @@ class Auth
     {
         $user = $this->userRepository->findByUser($username);
 
-        if ($user === null) {
+        if ($user === false) {
             return false;
         }
 
