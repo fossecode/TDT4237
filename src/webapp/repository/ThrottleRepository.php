@@ -6,7 +6,8 @@ use tdt4237\webapp\models\ThrottleEntry;
 
 class ThrottleRepository
 {
-    const FIND_BY_ID = "SELECT * FROM throttling WHERE ip = ?";
+    const INSERT_QUERY   = "INSERT INTO throttling(authorId, ip, timestamp) VALUES(?, ?, ?)";
+    const FIND_ALL_BY_IP = "SELECT * FROM throttling WHERE ip = ?";
 
     /**
      * @var PDO
@@ -20,18 +21,27 @@ class ThrottleRepository
 
     public function makeThrottleEntryFromRow(array $row)
     {
-        return new ThrottleEntry($row['id'], $row['ip']);
+        return new ThrottleEntry($row['authorId'], $row['ip'], $row['timestamp']);
     }
 
-    public function findByIP($ip)
+    public function findAllByIP($ip)
     {
-        $stmt = $this->pdo->prepare(self::FIND_BY_IP);
+        $stmt = $this->pdo->prepare(self::FIND_ALL_BY_IP);
         $stmt->execute(array($ip));
-        $row = $stmt->fetch();
-        if ($row === false) {
-            return false;
-        }
-        return $this->makeThrottleEntryFromRow($row);
+        $rows = $stmt->fetchAll();
+        if (!$rows)
+            return [];
+        else 
+            return array_map([$this, 'makeThrottleEntryFromRow'], $rows);
     }
 
+    public function saveNewEntry(ThrottleEntry $throttleEntry)
+    {
+        $stmt = $this->pdo->prepare(self::INSERT_QUERY);
+        return $stmt->execute(array(
+            $throttleEntry->getAuthorId(),
+            $throttleEntry->getIP(),
+            $throttleEntry->getTimestamp()
+        ));
+    }
 }
