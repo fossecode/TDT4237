@@ -26,6 +26,10 @@ class Throttling
     }
 
     public function calculatePenalty($throttleEntries) {
+        # This method needs a better algorithm for calculating
+        # the amount of seconds the penalty should last.
+        # I propose that we check the date close to now
+        # and exponentionally increase the seconds.
         $secondsPenalty = 0;
         foreach ($throttleEntries as $throttleEntry) {
             $secondsPenalty += 1;
