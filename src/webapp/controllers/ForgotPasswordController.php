@@ -45,9 +45,4 @@ class ForgotPasswordController extends Controller {
     function deny() {
 
     }
-
-
-
-
-
 } 

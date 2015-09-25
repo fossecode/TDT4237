@@ -96,7 +96,7 @@ class PostRepository
 
         if ($post->getPostId() === null) {
             $stmt = $this->pdo->prepare(self::INSERT_POST);
-            return $stmt->execute(array($title, $authorId, $content, $date));
+            $stmt->execute(array($title, $authorId, $content, $date));
         }
         return $this->pdo->lastInsertId();
     }
