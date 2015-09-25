@@ -2,6 +2,7 @@
 
 namespace tdt4237\webapp;
 use tdt4237\webapp\repository\ThrottleRepository;
+use tdt4237\webapp\models\ThrottleEntry;
 
 use Exception;
 
@@ -18,9 +19,24 @@ class Throttling
         $this->throttleRepository = $throttleRepository; 
     }
 
-    public function isIPAddressThrottled($ip)
+    public function registerEntry($authorId, $ip)
     {
-        $throttle = $this->throttleRepository->findByIp($ip);
-        return false;
+        $entry = new ThrottleEntry($authorId, $ip);
+        $this->throttleRepository->saveNewEntry($entry);
+    }
+
+    public function calculatePenalty($throttleEntries) {
+        $secondsPenalty = 0;
+        foreach ($throttleEntries as $throttleEntry) {
+            $secondsPenalty += 1;
+        }
+        return $secondsPenalty; 
+    }
+
+    public function delay($ip)
+    {
+        $throttleEntries = $this->throttleRepository->findAllByIP($ip);
+        $penalty = self::calculatePenalty($throttleEntries);
+        sleep($penalty);
     }
 }
