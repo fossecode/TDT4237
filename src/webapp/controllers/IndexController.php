@@ -21,7 +21,6 @@ class IndexController extends Controller
   //      if ($msg) {
     //        $variables['flash']['info'] = $msg;
     //    }
-
         $this->render('index.twig');
     }
 }

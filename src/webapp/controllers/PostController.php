@@ -91,7 +91,7 @@ class PostController extends Controller
             $request = $this->app->request;
             $title = $request->post('title');
             $content = $request->post('content');
-            $author = $this->userRepository->findByUser($request->post('author'));
+            $author = $this->userRepository->findByUserId($_SESSION['userId']);
             $date = date("Y-m-d H:i:s");
 
             $validation = new PostValidation($title, $author->getUsername(), $content);
