@@ -20,7 +20,7 @@ class Sql
         $q1 = "CREATE TABLE users (authorId INTEGER PRIMARY KEY AUTOINCREMENT, user VARCHAR(50) UNIQUE, pass VARCHAR(50), email varchar(50) default null, fullname varchar(50), address varchar(50), postcode INTEGER (4), age INTEGER(3), bio varchar(150), isadmin INTEGER);";
         $q6 = "CREATE TABLE posts (postId INTEGER PRIMARY KEY AUTOINCREMENT, authorId INTEGER NOT NULL, title TEXT NOT NULL, content TEXT NOT NULL, date DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(authorId) REFERENCES users(authorId));";
         $q7 = "CREATE TABLE comments(commentId INTEGER PRIMARY KEY AUTOINCREMENT, date DATETIME DEFAULT CURRENT_TIMESTAMP, authorId INTEGER NOT NULL, text INTEGER NOT NULL, postId INTEGER NOT NULL, FOREIGN KEY(postId) REFERENCES posts(postId), FOREIGN KEY(authorId) REFERENCES users(authorId));";
-        $q8 = "CREATE TABLE throttling(authorId INTEGER NOT NULL, ip VARCHAR(255), date DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(authorId) REFERENCES users(authorId));";
+        $q8 = "CREATE TABLE throttling(authorId INTEGER NOT NULL, ip VARCHAR(255), timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(authorId) REFERENCES users(authorId));";
 
         self::$pdo->exec($q1);
         self::$pdo->exec($q6);
