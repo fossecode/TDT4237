@@ -13,8 +13,8 @@
         <label>Text:</label>
         <textarea cols="40" rows="10" name="content"> </textarea><br />
 
-        <label>Author:</label>
-        <input type="text" name="author" readOnly="true" value="{{username}}"> <br />
+        <!-- Use session id instead serverside and remove author from request. -->
+        <input hidden type="text" name="author" readOnly="true" value="{{username}}"> <br />
         <input type="submit" name="submit" value="Create post">
     </form>
 {% endblock %}
