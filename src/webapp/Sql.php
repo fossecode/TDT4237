@@ -20,10 +20,12 @@ class Sql
         $q1 = "CREATE TABLE users (authorId INTEGER PRIMARY KEY AUTOINCREMENT, user VARCHAR(50) UNIQUE, pass VARCHAR(50), email varchar(50) default null, fullname varchar(50), address varchar(50), postcode INTEGER (4), age INTEGER(3), bio varchar(150), isadmin INTEGER);";
         $q6 = "CREATE TABLE posts (postId INTEGER PRIMARY KEY AUTOINCREMENT, authorId INTEGER NOT NULL, title TEXT NOT NULL, content TEXT NOT NULL, date DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(authorId) REFERENCES users(authorId));";
         $q7 = "CREATE TABLE comments(commentId INTEGER PRIMARY KEY AUTOINCREMENT, date DATETIME DEFAULT CURRENT_TIMESTAMP, authorId INTEGER NOT NULL, text INTEGER NOT NULL, postId INTEGER NOT NULL, FOREIGN KEY(postId) REFERENCES posts(postId), FOREIGN KEY(authorId) REFERENCES users(authorId));";
+        $q8 = "CREATE TABLE throttling(throttleId INTEGER PRIMARY KEY AUTOINCREMENT, ip VARCHAR(255), date DATETIME DEFAULT CURRENT_TIMESTAMP);";
 
         self::$pdo->exec($q1);
         self::$pdo->exec($q6);
         self::$pdo->exec($q7);
+        self::$pdo->exec($q8);
 
         print "[tdt4237] Done creating all SQL tables.".PHP_EOL;
 
@@ -73,9 +75,11 @@ class Sql
         $q1 = "DROP TABLE users";
         $q4 = "DROP TABLE posts";
         $q5 = "DROP TABLE comments";
+        $q6 = "DROP TABLE throttling";
         self::$pdo->exec($q1);
         self::$pdo->exec($q4);
         self::$pdo->exec($q5);
+        self::$pdo->exec($q6);
         print "[tdt4237] Done deleting all SQL tables.".PHP_EOL;
     }
 }
