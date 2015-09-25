@@ -65,10 +65,9 @@ class Auth
      */
     public function user()
     {
-        if ($this->check()) {
+        if ($this->check())
             return $this->userRepository->findByUser($_SESSION['user']);
-        }
-
+        
         throw new Exception('Not logged in but called Auth::user() anyway');
     }
 
@@ -80,10 +79,11 @@ class Auth
         if ($this->check()) {
             if(isset($_SESSION['isadmin']))
                 return $_SESSION['isadmin'] === 'yes';
-            else return false;
-        }
+        } 
+        
+        return false;
 
-        throw new Exception('Not logged in but called Auth::isAdmin() anyway');
+        //throw new Exception('Not logged in but called Auth::isAdmin() anyway');
     }
 
     public function logout()
@@ -92,5 +92,4 @@ class Auth
             session_destroy();
         }
     }
-
 }
