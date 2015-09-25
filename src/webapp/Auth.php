@@ -46,7 +46,7 @@ class Auth
 
     public function getUsername() {
         if(isset($_SESSION['user'])){
-        return $_SESSION['user'];
+            return $_SESSION['user'];
         }
     }
 
@@ -76,7 +76,7 @@ class Auth
     public function isAdmin()
     {
         if ($this->check()) {
-            return $_COOKIE['isadmin'] === 'yes';
+            return $_SESSION['isadmin'] === 'yes';
         }
 
         throw new Exception('Not logged in but called Auth::isAdmin() anyway');
