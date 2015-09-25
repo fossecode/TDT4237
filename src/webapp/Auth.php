@@ -28,10 +28,12 @@ class Auth
     public function checkCredentials($username, $password)
     {
         $user = $this->userRepository->findByUser($username);
-
         if ($user === false) {
             return false;
         }
+
+        //Set user id as session variable
+        $_SESSION['userId'] = $user->getUserId();
 
         return $this->hash->check($password, $user->getHash());
     }
