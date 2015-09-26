@@ -4,10 +4,12 @@ use Slim\Slim;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 use tdt4237\webapp\Auth;
+use tdt4237\webapp\Throttling;
 use tdt4237\webapp\Hash;
 use tdt4237\webapp\repository\UserRepository;
 use tdt4237\webapp\repository\PostRepository;
 use tdt4237\webapp\repository\CommentRepository;
+use tdt4237\webapp\repository\ThrottleRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -44,7 +46,9 @@ $app->hash = new Hash();
 $app->userRepository = new UserRepository($app->db);
 $app->postRepository = new PostRepository($app->db);
 $app->commentRepository = new CommentRepository($app->db);
+$app->throttleRepository = new ThrottleRepository($app->db);
 $app->auth = new Auth($app->userRepository, $app->hash);
+$app->throttling = new Throttling($app->throttleRepository);
 
 $ns ='tdt4237\\webapp\\controllers\\';
 

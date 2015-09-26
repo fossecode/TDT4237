@@ -27,6 +27,7 @@ class LoginController extends Controller
     public function login()
     {
         $request = $this->app->request;
+        $ip      = $request->getIp();
         $user    = $request->post('user');
         $pass    = $request->post('pass');
 
@@ -40,6 +41,17 @@ class LoginController extends Controller
             $this->app->flash('info', "You are now successfully logged in as $user.");
             $this->app->redirect('/');
             return;
+        } else {
+
+            # Throttle failed login attempts
+            $attemptedUser = $this->userRepository->findByUser($user);
+
+            if ($attemptedUser !== false) {
+                $authorId = $attemptedUser->getUserId();
+                $this->app->throttling->registerEntry($authorId, $ip);
+                $this->app->throttling->delay($ip);
+            }
+
         }
         
         $this->app->flashNow('error', 'Incorrect user/pass combination.');
