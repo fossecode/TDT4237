@@ -11,29 +11,30 @@ class PostRepository
     const SELECT_POST = "SELECT * FROM posts NATURAL JOIN users WHERE postId = ?;";
     const ALL_POSTS = "SELECT * FROM posts NATURAL JOIN users;";
     const DELETE_POST = "DELETE FROM posts WHERE postId = ?;";
-    const INSERT_POST = "INSERT INTO posts (title, authorId, content, date) VALUES (?,?,?,?)";
+    const INSERT_POST = "INSERT INTO posts (title, userId, content, timestamp) VALUES (?,?,?,?)";
 
     /**
      * @var PDO
      */
     private $pdo;
+    private $userRepository;
 
-    public function __construct(PDO $pdo)
+    public function __construct(PDO $pdo, UserRepository $userRepository)
     {
         $this->pdo = $pdo;
+        $this->userRepository = $userRepository;
     }
     
-    public static function create($id, $authorId, $title, $content, $date, $author)
+    public static function create($id, $title, $content, $date, $user)
     {
         $post = new Post;
         
         return $post
             ->setPostId($id)
-            ->setAuthorId($authorId)
+            ->setUser($user)
             ->setTitle($title)
             ->setContent($content)
-            ->setDate($date)
-            ->setAuthor($author);
+            ->setDate($date);
     }
 
     public function find($postId)
@@ -72,11 +73,10 @@ class PostRepository
     {
         return static::create(
             $row['postId'],
-            $row['authorId'],
             $row['title'],
             $row['content'],
-            $row['date'],
-            $row['user']
+            $row['timestamp'],
+            $this->userRepository->findByUserId($row['userId'])
         );
     }
 
@@ -90,13 +90,13 @@ class PostRepository
     public function save(Post $post)
     {
         $title   = $post->getTitle();
-        $authorId = $post->getAuthorId();
+        $userId = $post->getUserId();
         $content = $post->getContent();
         $date    = $post->getDate();
 
         if ($post->getPostId() === null) {
             $stmt = $this->pdo->prepare(self::INSERT_POST);
-            $stmt->execute(array($title, $authorId, $content, $date));
+            $stmt->execute(array($title, $userId, $content, $date));
         }
         return $this->pdo->lastInsertId();
     }

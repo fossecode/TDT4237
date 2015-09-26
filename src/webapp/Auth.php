@@ -27,7 +27,7 @@ class Auth
 
     public function checkCredentials($username, $password)
     {
-        $user = $this->userRepository->findByUser($username);
+        $user = $this->userRepository->findByUsername($username);
         if ($user === false) {
             return false;
         }
@@ -66,7 +66,7 @@ class Auth
     public function user()
     {
         if ($this->check())
-            return $this->userRepository->findByUser($_SESSION['user']);
+            return $this->userRepository->findByUsername($_SESSION['user']);
         
         throw new Exception('Not logged in but called Auth::user() anyway');
     }

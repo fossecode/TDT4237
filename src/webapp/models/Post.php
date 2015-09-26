@@ -11,11 +11,10 @@ namespace tdt4237\webapp\models;
 class Post
 {
     protected $postId;
-    protected $author;
+    protected $user;
     protected $title;
     protected $content;
     protected $date;
-    protected $authorId;
 
     public function getPostId() {
         return $this->postId;
@@ -27,22 +26,17 @@ class Post
         return $this;
     }
 
-    public function getAuthor() {
-        return $this->author;
+    public function getUser() {
+        return $this->user;
     }
 
-    public function setAuthor($author) {
-        $this->author = $author;
+    public function setUser($user) {
+        $this->user = $user;
         return $this;
     }
 
-    public function getAuthorId() {
-        return $this->authorId;
-    }
-
-    public function setAuthorId($authorId) {
-        $this->authorId = $authorId;
-        return $this;
+    public function getUserId() {
+        return $this->user->getUserId();
     }
 
     public function getDate() {

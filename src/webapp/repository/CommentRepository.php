@@ -7,32 +7,32 @@ use tdt4237\webapp\models\Comment;
 
 class CommentRepository
 {
-    const INSERT_COMMENT = "INSERT INTO comments (authorId, text, date, postId) VALUES (?,?,?,?);";
+    const INSERT_COMMENT = "INSERT INTO comments (userId, text, timestamp, postId) VALUES (?,?,?,?);";
     const GET_COMMENTS = "SELECT * FROM comments NATURAL JOIN users WHERE postId = ?";
 
     /**
      * @var PDO
      */
     private $pdo;
+    private $userRepository;
 
-    public function __construct(PDO $pdo)
+    public function __construct(PDO $pdo, UserRepository $userRepository)
     {
-
         $this->pdo = $pdo;
+        $this->userRepository = $userRepository;
     }
 
     public function save(Comment $comment)
     {
-        print_r($comment);
         $id = $comment->getCommentId();
-        $authorId = $comment->getAuthorId();
+        $userId = $comment->getUserId();
         $text = $comment->getText();
         $date = (string) $comment->getDate();
         $postid = $comment->getPost();
 
         if ($comment->getCommentId() === null) {
             $stmt = $this->pdo->prepare(self::INSERT_COMMENT);
-            return $stmt->execute(array($authorId, $text, $date, $postid));
+            return $stmt->execute(array($userId, $text, $date, $postid));
         }
     }
 
@@ -50,9 +50,9 @@ class CommentRepository
         
         return $comment
             ->setCommentId($row['commentId'])
-            ->setAuthor($row['user'])
+            ->setUser($this->userRepository->findByUserId($row['userId']))
             ->setText($row['text'])
-            ->setDate($row['date'])
+            ->setDate($row['timestamp'])
             ->setPost($row['postId']);
     }
 }

@@ -6,7 +6,7 @@ use tdt4237\webapp\models\ThrottleEntry;
 
 class ThrottleRepository
 {
-    const INSERT_QUERY   = "INSERT INTO throttling(authorId, ip, timestamp) VALUES(?, ?, ?)";
+    const INSERT_QUERY   = "INSERT INTO throttling(userId, ip, timestamp) VALUES(?, ?, ?)";
     const FIND_ALL_BY_IP = "SELECT * FROM throttling WHERE ip = ?";
 
     /**
@@ -21,7 +21,7 @@ class ThrottleRepository
 
     public function makeThrottleEntryFromRow(array $row)
     {
-        return new ThrottleEntry($row['authorId'], $row['ip'], $row['timestamp']);
+        return new ThrottleEntry($row['userId'], $row['ip'], $row['timestamp']);
     }
 
     public function findAllByIP($ip)
@@ -39,7 +39,7 @@ class ThrottleRepository
     {
         $stmt = $this->pdo->prepare(self::INSERT_QUERY);
         return $stmt->execute(array(
-            $throttleEntry->getAuthorId(),
+            $throttleEntry->getUserId(),
             $throttleEntry->getIP(),
             $throttleEntry->getTimestamp()
         ));

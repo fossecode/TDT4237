@@ -11,11 +11,10 @@ namespace tdt4237\webapp\models;
 class Comment
 {
     protected $commentId;
-    protected $author;
-    protected $authorId;
+    protected $user;
     protected $text;
     protected $date;
-    protected $belongs_to_post;
+    protected $postId;
 
 
     public function getCommentId() {
@@ -28,22 +27,17 @@ class Comment
         return $this;
     }
 
-    public function getAuthor() {
-        return $this->author;
+    public function getUser() {
+        return $this->user;
     }
 
-    public function setAuthor($author) {
-        $this->author = $author;
+    public function setUser($user) {
+        $this->user = $user;
         return $this;
     }
 
-    public function getAuthorId() {
-        return $this->authorId;
-    }
-
-    public function setAuthorId($authorId) {
-        $this->authorId = $authorId;
-        return $this;
+    public function getUserId() {
+        return $this->user->getUserId();
     }
 
     public function getDate() {
@@ -65,11 +59,11 @@ class Comment
     }
 
     public function getPost() {
-        return $this->belongs_to_post;
+        return $this->postId;
     }
 
     public function setPost($postId) {
-        $this->belongs_to_post = $postId;
+        $this->postId = $postId;
         return $this;
 
     }

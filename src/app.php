@@ -44,8 +44,8 @@ date_default_timezone_set("Europe/Oslo");
 
 $app->hash = new Hash();
 $app->userRepository = new UserRepository($app->db);
-$app->postRepository = new PostRepository($app->db);
-$app->commentRepository = new CommentRepository($app->db);
+$app->postRepository = new PostRepository($app->db, $app->userRepository);
+$app->commentRepository = new CommentRepository($app->db, $app->userRepository);
 $app->throttleRepository = new ThrottleRepository($app->db);
 $app->auth = new Auth($app->userRepository, $app->hash);
 $app->throttling = new Throttling($app->throttleRepository);

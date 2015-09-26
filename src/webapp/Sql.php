@@ -17,10 +17,10 @@ class Sql
      */
     static function up()
     {
-        $q1 = "CREATE TABLE users (authorId INTEGER PRIMARY KEY AUTOINCREMENT, user VARCHAR(50) UNIQUE, pass VARCHAR(50), email varchar(50) default null, fullname varchar(50), address varchar(50), postcode INTEGER (4), age INTEGER(3), bio varchar(150), isadmin INTEGER);";
-        $q6 = "CREATE TABLE posts (postId INTEGER PRIMARY KEY AUTOINCREMENT, authorId INTEGER NOT NULL, title TEXT NOT NULL, content TEXT NOT NULL, date DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(authorId) REFERENCES users(authorId));";
-        $q7 = "CREATE TABLE comments(commentId INTEGER PRIMARY KEY AUTOINCREMENT, date DATETIME DEFAULT CURRENT_TIMESTAMP, authorId INTEGER NOT NULL, text INTEGER NOT NULL, postId INTEGER NOT NULL, FOREIGN KEY(postId) REFERENCES posts(postId), FOREIGN KEY(authorId) REFERENCES users(authorId));";
-        $q8 = "CREATE TABLE throttling(authorId INTEGER NOT NULL, ip VARCHAR(255), timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(authorId) REFERENCES users(authorId));";
+        $q1 = "CREATE TABLE users(userId INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50) UNIQUE, password VARCHAR(50), email varchar(50) default null, fullname varchar(50), address varchar(50), postcode INTEGER (4), age INTEGER, bio varchar(150), isadmin INTEGER);";
+        $q6 = "CREATE TABLE posts(postId INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER NOT NULL, title TEXT NOT NULL, content TEXT NOT NULL, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(userId) REFERENCES users(userId));";
+        $q7 = "CREATE TABLE comments(commentId INTEGER PRIMARY KEY AUTOINCREMENT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, userId INTEGER NOT NULL, text INTEGER NOT NULL, postId INTEGER NOT NULL, FOREIGN KEY(postId) REFERENCES posts(postId), FOREIGN KEY(userId) REFERENCES users(userId));";
+        $q8 = "CREATE TABLE throttling(userId INTEGER NOT NULL, ip VARCHAR(255), timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(userId) REFERENCES users(userId));";
 
         self::$pdo->exec($q1);
         self::$pdo->exec($q6);
@@ -40,9 +40,9 @@ class Sql
         $hash2 = Hash::make('bobdylan');
         $hash3 = Hash::make('liverpool');
 
-        $q1 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode) VALUES ('admin', '$hash1', 1, 'admin', 'homebase', '9090')";
-        $q2 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode) VALUES ('bob', '$hash2', 1, 'Robert Green', 'Greenland Grove 9', '2010')";
-        $q3 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode) VALUES ('bjarni', '$hash3', 1, 'Bjarni Torgmund', 'Hummerdale 12', '4120')";
+        $q1 = "INSERT INTO users(username, password, isadmin, fullname, address, postcode) VALUES ('admin', '$hash1', 1, 'admin', 'homebase', '9090')";
+        $q2 = "INSERT INTO users(username, password, isadmin, fullname, address, postcode) VALUES ('bob', '$hash2', 1, 'Robert Green', 'Greenland Grove 9', '2010')";
+        $q3 = "INSERT INTO users(username, password, isadmin, fullname, address, postcode) VALUES ('bjarni', '$hash3', 1, 'Bjarni Torgmund', 'Hummerdale 12', '4120')";
 
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);
@@ -53,8 +53,8 @@ class Sql
     }
 
     static function insertPosts() {
-        $q4 = "INSERT INTO posts(authorId, date, title, content) VALUES (2, '2015-03-05 12:05:00', 'I have a problem', 'I have a generic problem I think its embarrasing to talk about. Someone help?')";
-        $q5 = "INSERT INTO posts(authorId, date, title, content) VALUES (3, '2015-03-04 13:10:00', 'I also have a problem', 'I generally fear very much for my health')";
+        $q4 = "INSERT INTO posts(userId, timestamp, title, content) VALUES (2, '2015-03-05 12:05:00', 'I have a problem', 'I have a generic problem I think its embarrasing to talk about. Someone help?')";
+        $q5 = "INSERT INTO posts(userId, timestamp, title, content) VALUES (3, '2015-03-04 13:10:00', 'I also have a problem', 'I generally fear very much for my health')";
 
         self::$pdo->exec($q4);
         self::$pdo->exec($q5);
@@ -63,8 +63,8 @@ class Sql
     }
 
     static function insertComments() {
-        $q1 = "INSERT INTO comments(authorId, date, text, postId) VALUES (3, '2015-03-05 12:05:00', 'Don''t be shy! No reason to be afraid here',0)";
-        $q2 = "INSERT INTO comments(authorId, date, text, postId) VALUES (2, '2015-03-05 12:05:00', 'I wouldn''t worry too much, really. Just relax!',1)";
+        $q1 = "INSERT INTO comments(userId, timestamp, text, postId) VALUES (3, '2015-03-05 12:05:00', 'Don''t be shy! No reason to be afraid here',0)";
+        $q2 = "INSERT INTO comments(userId, timestamp, text, postId) VALUES (2, '2015-03-05 12:05:00', 'I wouldn''t worry too much, really. Just relax!',1)";
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);
         print "[tdt4237] Done inserting comments.".PHP_EOL;

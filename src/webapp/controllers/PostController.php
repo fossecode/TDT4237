@@ -53,8 +53,7 @@ class PostController extends Controller
 
             $comment = new Comment();
             //The shit below must be changed to use ID and authentication.
-            $comment->setAuthor($_SESSION['user']);
-            $comment->setAuthorId($this->userRepository->findByUser($comment->getAuthor())->getUserId());
+            $comment->setUser($this->userRepository->findByUserId($_SESSION['userId']));
             $comment->setText($this->app->request->post("text"));
             $comment->setDate(date ("Y-m-d H:i:s"));
             $comment->setPost($postId);
@@ -91,14 +90,13 @@ class PostController extends Controller
             $request = $this->app->request;
             $title = $request->post('title');
             $content = $request->post('content');
-            $author = $this->userRepository->findByUserId($_SESSION['userId']);
+            $user = $this->userRepository->findByUserId($_SESSION['userId']);
             $date = date("Y-m-d H:i:s");
 
-            $validation = new PostValidation($title, $author->getUsername(), $content);
+            $validation = new PostValidation($title, $user->getUsername(), $content);
             if ($validation->isGoodToGo()) {
                 $post = new Post();
-                $post->setAuthor($author->getUsername());
-                $post->setAuthorId($author->getUserId());
+                $post->setUser($user);
                 $post->setTitle($title);
                 $post->setContent($content);
                 $post->setDate($date);

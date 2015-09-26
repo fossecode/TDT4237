@@ -5,19 +5,19 @@ namespace tdt4237\webapp\models;
 class ThrottleEntry 
 {
     protected $ip;
-    protected $authorId;
+    protected $userId;
     protected $timestamp;
 
-    function __construct($authorId, $ip, $timestamp = false)
+    function __construct($userId, $ip, $timestamp = false)
     {
-        $this->authorId  = intval($authorId);
+        $this->userId    = intval($userId);
         $this->ip        = $ip;
         $this->timestamp = ($timestamp ? $timestamp : date('Y-m-d H:i:s'));
     }
 
-    public function getAuthorId()
+    public function getUserId()
     {
-        return $this->authorId;
+        return $this->userId;
     }
 
     public function getIP()

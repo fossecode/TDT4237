@@ -19,9 +19,9 @@ class Throttling
         $this->throttleRepository = $throttleRepository; 
     }
 
-    public function registerEntry($authorId, $ip)
+    public function registerEntry($userId, $ip)
     {
-        $entry = new ThrottleEntry($authorId, $ip);
+        $entry = new ThrottleEntry($userId, $ip);
         $this->throttleRepository->saveNewEntry($entry);
     }
 

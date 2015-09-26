@@ -44,11 +44,11 @@ class LoginController extends Controller
         } else {
 
             # Throttle failed login attempts
-            $attemptedUser = $this->userRepository->findByUser($user);
+            $attemptedUser = $this->userRepository->findByUsername($user);
 
             if ($attemptedUser !== false) {
-                $authorId = $attemptedUser->getUserId();
-                $this->app->throttling->registerEntry($authorId, $ip);
+                $userId = $attemptedUser->getUserId();
+                $this->app->throttling->registerEntry($userId, $ip);
                 $this->app->throttling->delay($ip);
             }
 
