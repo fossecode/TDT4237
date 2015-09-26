@@ -12,8 +12,8 @@
         </tr>
         {% for user in users %}
             <tr>
-                <td>{{ user.userid|raw }}</td>
-                <td><a href="/user/{{ user.userid|raw }}">{{ user.username|raw }}</a></td>
+                <td>{{ user.userid|escape }}</td>
+                <td><a href="/user/{{ user.userid|escape }}">{{ user.username|escape }}</a></td>
             </tr>
         {% endfor %}
         </table>

@@ -5,7 +5,7 @@
     <h2>Create post</h2>
 
     <form action="" method="POST">
-        <div id="flasherror">{{ flash.error }}</div>
+        <div id="flasherror">{{ flash.error|escape }}</div>
 
         <label>Title:</label>
         <input type = "text" name="title"> <br />

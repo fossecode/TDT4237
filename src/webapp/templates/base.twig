@@ -22,7 +22,7 @@
         <div id="container">
             <div id="navbar">
                 {% if isLoggedIn %}
-                    Logged in as {{ loggedInUsername }}.<br>
+                    Logged in as {{ loggedInUsername|escape }}.<br>
                     <a href ="{{ urlFor('showposts') }}"> Show posts</a> <br>
                     <a href="{{ urlFor('editprofile') }}">Edit profile</a> <br>
                     <a href="{{ urlFor('createpost') }}"> Create new post</a><br>
@@ -43,7 +43,7 @@
             </div>
 
             <div id="content">
-                <div id="flashinfo">{{ flash.info|raw }}</div>
+                <div id="flashinfo">{{ flash.info|escape }}</div>
                 {% block content %}{% endblock %}
             </div>
         </div>

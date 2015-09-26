@@ -1,17 +1,17 @@
 {% extends 'base.twig' %}
 
 {% block content %}
-    <h3> {{ flash.msg|raw }}</h3>
+    <h3> {{ flash.msg|escape }}</h3>
     {% if post %}
-        <h2>{{ post.title}}</h2>
-        <h3> by {{post.author|raw}}</h3>
-        <p> {{ post.content }}</p>
+        <h2>{{ post.title|escape}}</h2>
+        <h3> by {{post.user.username|escape}} @ {{post.date|escape}}</h3>
+        <p> {{ post.content|escape }}</p>
         <lb></lb>
         <h2>COMMENTS</h2>
         {% for comment in comments %}
             <div class="review">
-                <b>Author:</b> {{ comment.author }} <b> posted on: {{ comment.date }} </b>
-                <pre> {{ comment.text|raw }}</pre>
+                <b>Author:</b> {{ comment.user.username|escape }} <b> posted on: {{ comment.date|escape }} </b>
+                <pre> {{ comment.text|escape }}</pre>
             </div>
         {% else %}
             <br>

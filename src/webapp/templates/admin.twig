@@ -12,9 +12,9 @@
     </tr>
     {% for user in users %}
         <tr>
-            <td>{{ user.userid|raw }}</td>
-            <td><a href="/user/{{ user.userid|raw }}">{{ user.username|raw }}</a></td>
-            <td><a href="/admin/delete/{{ user.userid|raw }}">Delete this user</a></td>
+            <td>{{ user.userid|escape }}</td>
+            <td><a href="/user/{{ user.userid|escape }}">{{ user.username|escape }}</a></td>
+            <td><a href="/admin/delete/{{ user.userid|escape }}">Delete this user</a></td>
         </tr>
     {% endfor %}
     </table>
@@ -31,9 +31,9 @@
         </tr>
         {% for post in posts %}
         <tr>
-            <td>{{ post.postId|raw }}</td>
-            <td><a href="/posts/{{ post.postId|raw }}">{{ post.title }}</a></td>
-            <td><a href="/admin/delete/post/{{ post.postid|raw }}">Delete this post</a></td>
+            <td>{{ post.postId|escape }}</td>
+            <td><a href="/posts/{{ post.postId|escape }}">{{ post.title|escape }}</a></td>
+            <td><a href="/admin/delete/post/{{ post.postid|escape }}">Delete this post</a></td>
         </tr>
         {% endfor %}
     </table>

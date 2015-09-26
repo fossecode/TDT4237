@@ -4,8 +4,8 @@
 
 <h2>Login</h2>
 
-{{ flash.error}} <br />
-{{ flash.success|raw }}
+{{ flash.error|escape}} <br />
+{{ flash.success|escape }}
 <form action="" method="POST">
 
 <label>Username: </label>
