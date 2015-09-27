@@ -35,10 +35,14 @@ class AdminController extends Controller
     public function delete($userId)
     {
         if ($this->auth->isAdmin()) {
-            if ($this->userRepository->deleteByUserId($userId)) {
-                $this->app->flash('info', "Sucessfully deleted user.");
-                $this->app->redirect('/admin');
-                return;
+            $csrfToken = $this->app->request->get("token");
+            $validation = new Validation($csrfToken);
+            if($validation->isGoodToGo()){
+                if ($this->userRepository->deleteByUserId($userId)) {
+                    $this->app->flash('info', "Sucessfully deleted user.");
+                    $this->app->redirect('/admin');
+                    return;
+                }
             }
         }
 
@@ -49,10 +53,14 @@ class AdminController extends Controller
     public function deletePost($postId)
     {
         if ($this->auth->isAdmin()) {
-            if ($this->postRepository->deleteByPostid($postId)) {
-                $this->app->flash('info', "Sucessfully deleted post with id $postId");
-                $this->app->redirect('/admin');
-                return;
+            $csrfToken = $this->app->request->get("token");
+            $validation = new Validation($csrfToken);
+            if($validation->isGoodToGo()){
+                if ($this->postRepository->deleteByPostid($postId)) {
+                    $this->app->flash('info', "Sucessfully deleted post with id $postId");
+                    $this->app->redirect('/admin');
+                    return;
+                }
             }
         }
 

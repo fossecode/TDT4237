@@ -73,7 +73,7 @@ class PostController extends Controller
         }
         else {
             $this->app->redirect('/login');
-            $this->app->flash('info', 'you must log in to do that');
+            $this->app->flash('info', 'You must log in to do that');
         }
 
     }
