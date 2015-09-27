@@ -10,16 +10,6 @@ class EditUserFormValidation extends Validation
         parent::__construct($csrfToken);
         $this->validate($email, $bio, $age, $fullname, $address, $postcode);
     }
-    
-    public function isGoodToGo()
-    {
-        return \count($this->validationErrors) === 0;
-    }
-    
-    public function getValidationErrors()
-    {
-        return $this->validationErrors;
-    }
 
     private function validate($email, $bio, $age, $fullname, $address, $postcode)
     {

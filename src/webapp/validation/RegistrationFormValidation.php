@@ -13,16 +13,6 @@ class RegistrationFormValidation extends Validation
         parent::__construct($csrfToken);
         return $this->validate($username, $password, $fullname, $address, $postcode);
     }
-    
-    public function isGoodToGo()
-    {
-        return empty($this->validationErrors);
-    }
-    
-    public function getValidationErrors()
-    {
-        return $this->validationErrors;
-    }
 
     private function validate($username, $password, $fullname, $address, $postcode)
     {

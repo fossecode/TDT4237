@@ -6,6 +6,7 @@ use tdt4237\webapp\models\Post;
 use tdt4237\webapp\controllers\UserController;
 use tdt4237\webapp\models\Comment;
 use tdt4237\webapp\validation\PostValidation;
+use tdt4237\webapp\validation\CommentValidation;
 
 class PostController extends Controller
 {
@@ -26,18 +27,15 @@ class PostController extends Controller
 
     }
 
-    public function show($postId)
+    public function show($postId, $variables = [])
     {
         $post = $this->postRepository->find($postId);
         $comments = $this->commentRepository->findByPostId($postId);
         $request = $this->app->request;
         $message = $request->get('msg');
-        $variables = [];
-
 
         if($message) {
             $variables['msg'] = $message;
-
         }
 
         $this->render('showpost.twig', [
@@ -53,14 +51,25 @@ class PostController extends Controller
 
         if(!$this->auth->guest()) {
 
-            $comment = new Comment();
-            //The shit below must be changed to use ID and authentication.
-            $comment->setUser($this->userRepository->findByUserId($_SESSION['userId']));
-            $comment->setText($this->app->request->post("text"));
-            $comment->setDate(date ("Y-m-d H:i:s"));
-            $comment->setPost($postId);
-            $this->commentRepository->save($comment);
-            $this->app->redirect('/posts/' . $postId);
+            $user = $this->userRepository->findByUserId($_SESSION['userId']);
+            $text = $this->app->request->post("text");
+            $csrfToken = $this->app->request->post("csrf");
+            $isPost = $this->postRepository->isPost($postId);
+
+            $validation = new CommentValidation($user, $text, $isPost, $csrfToken);
+            
+            if ($validation->isGoodToGo()) {
+
+                $comment = new Comment();
+                $comment->setUser($user);
+                $comment->setText($text);
+                $comment->setDate(date ("Y-m-d H:i:s"));
+                $comment->setPost($postId);
+                $this->commentRepository->save($comment);
+                $this->app->redirect('/posts/' . $postId);
+            }
+
+            $this->show($postId, ['errors' => $validation->getValidationErrors()]);
         }
         else {
             $this->app->redirect('/login');
@@ -79,7 +88,7 @@ class PostController extends Controller
             ]);
         } else {
 
-            $this->app->flash('error', "You need to be logged in to create a post");
+            $this->app->flash('errors', ["You need to be logged in to create a post"]);
             $this->app->redirect("/");
         }
 
@@ -110,7 +119,7 @@ class PostController extends Controller
             }
         }
 
-            $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
+            $this->app->flashNow('errors', $validation->getValidationErrors());
             $this->app->render('createpost.twig');
             // RENDER HERE
 

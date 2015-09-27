@@ -49,6 +49,12 @@ class PostRepository
         return $this->makeFromRow($rows);
     }
 
+    public function isPost($postId){
+        if (! $this->find($postId))
+            return false;
+        return true;
+    }
+
     public function all()
     {
         $stmt = $this->pdo->prepare(self::ALL_POSTS);

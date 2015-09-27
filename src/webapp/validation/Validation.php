@@ -14,6 +14,14 @@ class Validation {
         if ($csrf !== $_SESSION['CSRF_token'])
         	$this->validationErrors[] = 'Invalid CSRF token.';
     }
+    
+    public function isGoodToGo() {
+        return empty($this->validationErrors);
+    }
+    
+    public function getValidationErrors() {
+        return $this->validationErrors;
+    }
 }
 
 ?>

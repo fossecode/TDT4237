@@ -12,16 +12,6 @@ class PostValidation extends Validation
         return $this->validate($user, $title, $content);
     }
 
-    public function isGoodToGo()
-    {
-        return \count($this->validationErrors) ===0;
-    }
-
-    public function getValidationErrors()
-    {
-    return $this->validationErrors;
-    }
-
     public function validate($user, $title, $content)
     {
         if ($user == null) {
