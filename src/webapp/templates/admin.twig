@@ -14,7 +14,7 @@
         <tr>
             <td>{{ user.userid|escape }}</td>
             <td><a href="/user/{{ user.userid|escape }}">{{ user.username|escape }}</a></td>
-            <td><a href="/admin/delete/{{ user.userid|escape }}">Delete this user</a></td>
+            <td><a href="/admin/delete/{{ user.userid|escape }}?token={{ csrf }}">Delete this user</a></td>
         </tr>
     {% endfor %}
     </table>
@@ -33,7 +33,7 @@
         <tr>
             <td>{{ post.postId|escape }}</td>
             <td><a href="/posts/{{ post.postId|escape }}">{{ post.title|escape }}</a></td>
-            <td><a href="/admin/delete/post/{{ post.postid|escape }}">Delete this post</a></td>
+            <td><a href="/admin/delete/post/{{ post.postid|escape }}?token={{ csrf }}">Delete this post</a></td>
         </tr>
         {% endfor %}
     </table>

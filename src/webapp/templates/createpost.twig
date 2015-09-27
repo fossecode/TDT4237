@@ -13,5 +13,6 @@
         <label>Text:</label>
         <textarea cols="40" rows="10" name="content"> </textarea><br />
         <input type="submit" name="submit" value="Create post">
+        <input type="text" name="csrf" hidden value="{{ csrf }}">
     </form>
 {% endblock %}

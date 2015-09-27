@@ -24,6 +24,7 @@
 
         <label>Age:</label>
         <input type="text" name="age" value="{{ user.age|escape }}"> <br />
+        <input type="text" name="csrf" hidden value="{{ csrf }}">
 
         <input type="submit" name="submit" value="Save profile">
     </form>

@@ -23,6 +23,7 @@
         <p>Comment: </p>
         <form method="post" action="">
             <textarea cols="40" rows="10" name="text" ></textarea> <br />
+            <input type="text" name="csrf" hidden value="{{ csrf }}">
             <input type="submit" value="Submit comment" name="submit"></button>
         </form>
 
