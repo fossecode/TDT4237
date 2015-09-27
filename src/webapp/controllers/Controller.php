@@ -27,8 +27,8 @@ class Controller
             $variables['isLoggedIn'] = true;
             $variables['isAdmin'] = $this->auth->isAdmin();
             $variables['loggedInUsername'] = $_SESSION['user'];
-            $variables['csrf'] = $_SESSION['CSRF_token'];
         }
+        $variables['csrf'] = $_SESSION['CSRF_token'];
 
         print $this->app->render($template, $variables);
     }

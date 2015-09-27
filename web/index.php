@@ -13,7 +13,7 @@ session_start();
 if (! isset($_SESSION['request_counter']))
     $_SESSION['request_counter'] = 0;
 
-if (! isset($_SESSION['CSRF_token'])){
+if (! isset($_SESSION['CSRF_token']) || $_SESSION['CSRF_token'] == null){
 	$_SESSION['CSRF_token'] = md5(uniqid(rand(), true));
 }
 

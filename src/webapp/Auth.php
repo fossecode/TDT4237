@@ -90,6 +90,7 @@ class Auth
     {
         if(!$this->guest()) {
             session_destroy();
+            unset($_SESSION['CSRF_token']);
         }
     }
 }
