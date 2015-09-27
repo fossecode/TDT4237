@@ -19,7 +19,7 @@ class UserController extends Controller
     public function index()
     {
         if ($this->auth->guest()) {
-            return $this->render('newUserForm.twig', []);
+            return $this->render('newUserForm.twig');
         }
 
         $username = $this->auth->user()->getUserName();
@@ -35,9 +35,9 @@ class UserController extends Controller
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
+        $csrfToken = $request->post('csrf');
 
-
-        $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode);
+        $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode, $csrfToken);
 
         if ($validation->isGoodToGo()) {
             $password = $password;
@@ -51,7 +51,9 @@ class UserController extends Controller
 
         $errors = join("<br>\n", $validation->getValidationErrors());
         $this->app->flashNow('error', $errors);
-        $this->render('newUserForm.twig', ['username' => $username]);
+        $this->render('newUserForm.twig', [
+            'username' => $username
+        ]);
     }
 
     public function all()
@@ -115,8 +117,9 @@ class UserController extends Controller
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
+        $csrfToken = $request->post('csrf');
 
-        $validation = new EditUserFormValidation($email, $bio, $age);
+        $validation = new EditUserFormValidation($email, $bio, $age, $csrfToken);
 
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));
@@ -128,11 +131,15 @@ class UserController extends Controller
             $this->userRepository->save($user);
 
             $this->app->flashNow('info', 'Your profile was successfully saved.');
-            return $this->render('edituser.twig', ['user' => $user]);
+            return $this->render('edituser.twig',  [
+                'user' => $user
+            ]);
         }
 
         $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
-        $this->render('edituser.twig', ['user' => $user]);
+        $this->render('edituser.twig', [
+            'user' => $user
+        ]);
     }
 
     public function makeSureUserIsAuthenticated()

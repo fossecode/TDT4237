@@ -10,7 +10,7 @@ class ForgotPasswordController extends Controller {
 
 
     function forgotPassword() {
-        $this->render('forgotPassword.twig', []);
+        $this->render('forgotPassword.twig');
     }
 
     function submitName() {
@@ -28,7 +28,9 @@ class ForgotPasswordController extends Controller {
     function confirmForm($username) {
         if($username != "") {
             $user = $this->userRepository->findByUsername($username);
-            $this->render('forgotPasswordConfirm.twig', ['user' => $user]);
+            $this->render('forgotPasswordConfirm.twig', [
+                'user' => $user
+            ]);
         }
         else {
             $this->app->flashNow("error", "Please write in a username");

@@ -20,7 +20,9 @@ class PostController extends Controller
     {
         $posts = $this->postRepository->all();
         $posts->sortByDate();
-        $this->render('posts.twig', ['posts' => $posts]);
+        $this->render('posts.twig', [
+            'posts' => $posts
+        ]);
 
     }
 
@@ -72,7 +74,9 @@ class PostController extends Controller
 
         if ($this->auth->check()) {
             $username = $_SESSION['user'];
-            $this->render('createpost.twig', ['username' => $username]);
+            $this->render('createpost.twig', [
+                'username' => $username
+            ]);
         } else {
 
             $this->app->flash('error', "You need to be logged in to create a post");
@@ -90,10 +94,11 @@ class PostController extends Controller
             $request = $this->app->request;
             $title = $request->post('title');
             $content = $request->post('content');
+            $csrfToken = $request->post('csrf');
             $user = $this->userRepository->findByUserId($_SESSION['userId']);
             $date = date("Y-m-d H:i:s");
 
-            $validation = new PostValidation($title, $user->getUsername(), $content);
+            $validation = new PostValidation($title, $user->getUsername(), $content, $csrfToken);
             if ($validation->isGoodToGo()) {
                 $post = new Post();
                 $post->setUser($user);
