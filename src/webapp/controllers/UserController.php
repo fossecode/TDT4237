@@ -119,7 +119,7 @@ class UserController extends Controller
         $postcode = $request->post('postcode');
         $csrfToken = $request->post('csrf');
 
-        $validation = new EditUserFormValidation($email, $bio, $age, $csrfToken);
+        $validation = new EditUserFormValidation($email, $bio, $age, $fullname, $address, $postcode, $csrfToken);
 
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));
