@@ -10,13 +10,13 @@ use tdt4237\webapp\models\User;
 
 class UserRepository
 {
-    const INSERT_QUERY   = "INSERT INTO users(username, password, email, age, bio, isadmin, fullname, address, postcode) VALUES(?,?,?,?,?,?,?,?,?)";
-    const UPDATE_QUERY   = "UPDATE users SET email=?, age=?, bio=?, isadmin=?, fullname =?, address = ?, postcode = ? WHERE userId=?";
-    const FIND_BY_ID   = "SELECT * FROM users WHERE userId=?";
-    const FIND_BY_USERNAME   = "SELECT * FROM users WHERE username=?";
-    const DELETE_BY_ID = "DELETE FROM users WHERE userId=?";
-    const SELECT_ALL     = "SELECT * FROM users";
-    const FIND_FULL_NAME = "SELECT * FROM users WHERE userId=?";
+    const INSERT_QUERY      = "INSERT INTO users(username, password, email, age, bio, isadmin, fullname, address, postcode) VALUES(?,?,?,?,?,?,?,?,?)";
+    const UPDATE_QUERY      = "UPDATE users SET email=?, age=?, bio=?, isadmin=?, fullname =?, address = ?, postcode = ? WHERE userId=?";
+    const FIND_BY_ID        = "SELECT * FROM users WHERE userId=?";
+    const FIND_BY_USERNAME  = "SELECT * FROM users WHERE username=?";
+    const DELETE_BY_ID      = "DELETE FROM users WHERE userId=?";
+    const SELECT_ALL        = "SELECT * FROM users";
+    const FIND_FULL_NAME    = "SELECT * FROM users WHERE userId=?";
 
     /**
      * @var PDO

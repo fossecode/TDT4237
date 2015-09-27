@@ -7,8 +7,8 @@ use tdt4237\webapp\models\Comment;
 
 class CommentRepository
 {
-    const INSERT_COMMENT = "INSERT INTO comments (userId, text, timestamp, postId) VALUES (?,?,?,?);";
-    const GET_COMMENTS = "SELECT * FROM comments NATURAL JOIN users WHERE postId = ?";
+    const INSERT_COMMENT    = "INSERT INTO comments (userId, text, timestamp, postId) VALUES (?,?,?,?);";
+    const GET_COMMENTS      = "SELECT * FROM comments NATURAL JOIN users WHERE postId = ?";
 
     /**
      * @var PDO

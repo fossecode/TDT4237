@@ -8,10 +8,10 @@ use tdt4237\webapp\models\PostCollection;
 
 class PostRepository
 {
-    const SELECT_POST = "SELECT * FROM posts NATURAL JOIN users WHERE postId = ?;";
-    const ALL_POSTS = "SELECT * FROM posts NATURAL JOIN users;";
-    const DELETE_POST = "DELETE FROM posts WHERE postId = ?;";
-    const INSERT_POST = "INSERT INTO posts (title, userId, content, timestamp) VALUES (?,?,?,?)";
+    const SELECT_POST   = "SELECT * FROM posts NATURAL JOIN users WHERE postId = ?;";
+    const ALL_POSTS     = "SELECT * FROM posts NATURAL JOIN users;";
+    const DELETE_POST   = "DELETE FROM posts WHERE postId = ?;";
+    const INSERT_POST   = "INSERT INTO posts (title, userId, content, timestamp) VALUES (?,?,?,?)";
 
     /**
      * @var PDO
