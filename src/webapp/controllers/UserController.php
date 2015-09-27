@@ -37,7 +37,7 @@ class UserController extends Controller
         $postcode = $request->post('postcode');
         $csrfToken = $request->post('csrf');
 
-        $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode, $csrfToken);
+        $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode, $csrfToken, $this->userRepository);
 
         if ($validation->isGoodToGo()) {
             $password = $password;
@@ -78,7 +78,7 @@ class UserController extends Controller
         } else {
             $user = $this->userRepository->findByUserId($userId);
 
-            //The following doesnt check enough.
+            //Does the following check enough?
 
             if ($user != false && $user->getUsername() == $this->auth->getUsername()) {
 

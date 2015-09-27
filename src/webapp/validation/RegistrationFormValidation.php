@@ -6,18 +6,33 @@ use tdt4237\webapp\models\User;
 
 class RegistrationFormValidation extends Validation
 {
-    const MIN_USER_LENGTH = 3;
-    
-    public function __construct($username, $password, $fullname, $address, $postcode, $csrfToken)
+
+    public function __construct($username, $password, $fullname, $address, $postcode, $csrfToken, $userRepository)
     {
         parent::__construct($csrfToken);
-        return $this->validate($username, $password, $fullname, $address, $postcode);
+        return $this->validate($username, $password, $fullname, $address, $postcode, $userRepository);
     }
 
-    private function validate($username, $password, $fullname, $address, $postcode)
+    private function validate($username, $password, $fullname, $address, $postcode, $userRepository)
     {
         if (empty($password)) {
             $this->validationErrors[] = 'Password cannot be empty';
+        }
+
+        if (strlen($password) < 6 || strlen($password) >= 50) {
+            $this->validationErrors[] = 'Password must be between 6 and 50 characters long.';
+        }
+
+        if (empty($username)) {
+            $this->validationErrors[] = 'Username cannot be empty';
+        }
+
+        if ($userRepository->findByUsername($username)){
+            $this->validationErrors[] = 'Username already in use';
+        }
+
+        if (strlen($username) < 3 || strlen($username) >= 50) {
+            $this->validationErrors[] = 'Username must be between 3 and 50 characters long.';
         }
 
         if(empty($fullname)) {
