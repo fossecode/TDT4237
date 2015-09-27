@@ -54,7 +54,7 @@ class LoginController extends Controller
 
         }
         
-        $this->app->flashNow('error', 'Incorrect user/pass combination.');
+        $this->app->flashNow('errors', ['Incorrect user/pass combination.']);
         $this->render('login.twig');
     }
 }

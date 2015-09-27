@@ -5,7 +5,13 @@
 <h2>User</h2>
 
 {{ flash.info }} <br />
-{{ flash.error }} <br />
+{% if flash.errors %}
+<ul>
+    {% for error in flash.errors %}
+        <li> {{ error|escape }}
+    {% endfor %}
+</ul>
+{% endif %}
 
 {% if user %}
     <table>

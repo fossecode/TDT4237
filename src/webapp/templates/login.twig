@@ -4,7 +4,13 @@
 
 <h2>Login</h2>
 
-{{ flash.error|escape}} <br />
+{% if flash.errors %}
+<ul>
+    {% for error in flash.errors %}
+        <li> {{ error|escape }}
+    {% endfor %}
+</ul>
+{% endif %}
 {{ flash.success|escape }}
 <form action="" method="POST">
 

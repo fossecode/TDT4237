@@ -5,7 +5,13 @@
     <h2>Edit profile</h2>
 
     <form action="" method="POST">
-        <div id="flasherror">{{ flash.error|escape }}</div>
+        {% if flash.errors %}
+        <ul>
+            {% for error in flash.errors %}
+                <li> {{ error|escape }}
+            {% endfor %}
+        </ul>
+        {% endif %}
 
         <label>Full name:</label>
         <input type = "text" name="fullname" value= "{{ user.fullname|escape }}"> <br />
@@ -17,7 +23,7 @@
         <input type = "text" name="postcode"  value= "{{ user.postcode|escape }}"> <br />
 
         <label>Email:</label>
-        <input type="text" name="email" value="{{ user.email|escape}}"> <br />
+        <input type="text" name="email" value="{{ user.email|escape }}"> <br />
 
         <label>Bio:</label>
         <textarea name="bio">{{ user.bio|escape }}</textarea>

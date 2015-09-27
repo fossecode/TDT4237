@@ -2,6 +2,13 @@
 
 {% block content %}
     <h3> {{ flash.msg|escape }}</h3>
+    {% if flash.errors %}
+    <ul>
+        {% for error in flash.errors %}
+            <li> {{ error|escape }}
+        {% endfor %}
+    </ul>
+    {% endif %}
     {% if post %}
         <h2>{{ post.title|escape}}</h2>
         <h3> by {{post.user.username|escape}} @ {{post.date|escape}}</h3>

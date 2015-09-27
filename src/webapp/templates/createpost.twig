@@ -5,7 +5,13 @@
     <h2>Create post</h2>
 
     <form action="" method="POST">
-        <div id="flasherror">{{ flash.error|escape }}</div>
+        {% if flash.errors %}
+        <ul>
+            {% for error in flash.errors %}
+                <li> {{ error|escape }}
+            {% endfor %}
+        </ul>
+        {% endif %}
 
         <label>Title:</label>
         <input type = "text" name="title"> <br />

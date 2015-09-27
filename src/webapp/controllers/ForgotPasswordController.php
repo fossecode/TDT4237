@@ -20,7 +20,7 @@ class ForgotPasswordController extends Controller {
         }
         else {
             $this->render('forgotPassword.twig');
-            $this->app->flash("error", "Please input a username");
+            $this->app->flash("errors", ["Please input a username"]);
         }
 
     }
@@ -33,7 +33,7 @@ class ForgotPasswordController extends Controller {
             ]);
         }
         else {
-            $this->app->flashNow("error", "Please write in a username");
+            $this->app->flashNow("errors", ["Please write in a username"]);
         }
     }
 
