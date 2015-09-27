@@ -16,6 +16,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 chdir(__DIR__ . '/../');
 chmod(__DIR__ . '/../web/uploads', 0700);
 
+//Regenerate session id every 20th request to stop session hijacking and session fixation.
+if (++$_SESSION['request_counter'] >= 20) {
+    $_SESSION['request_counter'] = 0;
+    session_regenerate_id(true);
+}
+
 $app = new Slim([
     'templates.path' => __DIR__.'/webapp/templates/',
     'debug' => true,
