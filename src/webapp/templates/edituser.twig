@@ -20,16 +20,16 @@
         <input type = "text" name="address" value= "{{ user.address|escape }}"> <br />
 
         <label>Postcode:</label>
-        <input type = "text" name="postcode"  value= "{{ user.postcode|escape }}"> <br />
+        <input type = "number" name="postcode" maxlength="4" minlength="4" value= "{{ user.postcode|escape }}"> <br />
 
         <label>Email:</label>
-        <input type="text" name="email" value="{{ user.email|escape }}"> <br />
+        <input type="email" name="email" value="{{ user.email|escape }}"> <br />
 
         <label>Bio:</label>
         <textarea name="bio">{{ user.bio|escape }}</textarea>
 
         <label>Age:</label>
-        <input type="text" name="age" value="{{ user.age|escape }}"> <br />
+        <input type="number" max="130" min="0" name="age" value="{{ user.age|escape }}"> <br />
         <input type="text" name="csrf" hidden value="{{ csrf }}">
 
         <input type="submit" name="submit" value="Save profile">

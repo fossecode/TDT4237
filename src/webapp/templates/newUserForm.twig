@@ -16,15 +16,15 @@
 <form action="" method="POST">
 
     <label>Username: </label>
-    <input type="text" name="user" value="{{ username|escape }}"> <br />
+    <input type="text" name="user" minlength="3" maxlength="50" value="{{ username|escape }}"> <br />
     <label>Password: </label>
-    <input type="password" name="pass"> <br />
+    <input type="password" name="pass" minlength="6" maxlength="50"> <br />
     <label>Full Name (Will not be visible for other users)</label>
     <input type="text" name = "fullname"><br/>
     <label>Address (Will not be visible for other users)</label>
     <input type ="text" name = "address"><br/>
     <label> Postcode (Only four digits please)</label>
-    <input type = "text" name = "postcode"><br/>
+    <input type = "number" minlength="4" maxlength="4" name = "postcode"><br/>
     <input type="text" name="csrf" hidden value="{{ csrf }}">
     <input type="submit" name="submit" value="Create new user"> <br/>
 
