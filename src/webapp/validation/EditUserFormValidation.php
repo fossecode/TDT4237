@@ -2,12 +2,12 @@
 
 namespace tdt4237\webapp\validation;
 
-class EditUserFormValidation
+class EditUserFormValidation extends Validation
 {
-    private $validationErrors = [];
     
-    public function __construct($email, $bio, $age)
+    public function __construct($email, $bio, $age, $csrfToken)
     {
+        parent::__construct($csrfToken);
         $this->validate($email, $bio, $age);
     }
     

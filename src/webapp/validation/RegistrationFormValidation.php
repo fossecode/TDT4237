@@ -4,14 +4,13 @@ namespace tdt4237\webapp\validation;
 
 use tdt4237\webapp\models\User;
 
-class RegistrationFormValidation
+class RegistrationFormValidation extends Validation
 {
     const MIN_USER_LENGTH = 3;
     
-    private $validationErrors = [];
-    
-    public function __construct($username, $password, $fullname, $address, $postcode)
+    public function __construct($username, $password, $fullname, $address, $postcode, $csrfToken)
     {
+        parent::__construct($csrfToken);
         return $this->validate($username, $password, $fullname, $address, $postcode);
     }
     

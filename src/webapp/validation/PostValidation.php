@@ -4,11 +4,11 @@ namespace tdt4237\webapp\validation;
 
 use tdt4237\webapp\models\Post;
 
-class PostValidation {
+class PostValidation extends Validation
+{
 
-    private $validationErrors = [];
-
-    public function __construct($user, $title, $content) {
+    public function __construct($user, $title, $content, $csrfToken) {
+        parent::__construct($csrfToken);
         return $this->validate($user, $title, $content);
     }
 
@@ -38,6 +38,4 @@ class PostValidation {
 
         return $this->validationErrors;
     }
-
-
 }
