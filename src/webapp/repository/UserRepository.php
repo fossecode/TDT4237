@@ -134,7 +134,7 @@ class UserRepository
         return $stmt->execute(array(1,$userId));
     }
 
-    public function makeDoctor($userId)
+    public function removeDoctor($userId)
     {
         $stmt = $this->pdo->prepare(self::SET_DOCTOR);
         return $stmt->execute(array(0,$userId));
