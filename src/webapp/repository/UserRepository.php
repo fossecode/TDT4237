@@ -39,7 +39,7 @@ class UserRepository
         $user->setBio($row['bio']);
         $user->setIsAdmin($row['isadmin']);
         $user->setIsDoctor($row['isdoctor']);
-        $user->setAccountNumber($row['accountNumber'])
+        $user->setAccountNumber($row['accountNumber']);
 
         if (!empty($row['email'])) {
             $user->setEmail(new Email($row['email']));

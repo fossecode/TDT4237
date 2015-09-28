@@ -10,6 +10,7 @@ use tdt4237\webapp\repository\UserRepository;
 use tdt4237\webapp\repository\PostRepository;
 use tdt4237\webapp\repository\CommentRepository;
 use tdt4237\webapp\repository\ThrottleRepository;
+use tdt4237\webapp\repository\PaymentRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
