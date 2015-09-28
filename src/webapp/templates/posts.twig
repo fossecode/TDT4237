@@ -4,7 +4,6 @@
 
     <h2>Posts</h2>
     {% if user.isDoctor %}
-
     	{% for post in posts %}
 
     		{% if post.isPaymentPost %}
@@ -17,8 +16,7 @@
     	
     	{% endfor %}    
     
-    {% else %}    
-    
+    {% else %}
 	    {% for post in posts %}
 	    	
 	        <div class="post">

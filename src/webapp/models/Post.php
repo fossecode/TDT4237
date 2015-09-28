@@ -67,7 +67,7 @@ class Post
     }
 
     public function isPaymentPost(){
-        if($this->user->accountNumber == null || $this->user->accountNumber == "")
+        if($this->user->getAccountNumber() == null || $this->user->getAccountNumber() == "")
             return false;
         return true;
     }

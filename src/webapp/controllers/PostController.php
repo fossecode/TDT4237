@@ -21,8 +21,10 @@ class PostController extends Controller
     {
         $posts = $this->postRepository->all();
         $posts->sortByDate();
+        $user = $this->userRepository->findByUserId($_SESSION['userId']);
         $this->render('posts.twig', [
-            'posts' => $posts
+            'posts' => $posts,
+            'user' => $user
         ]);
 
     }
