@@ -78,7 +78,7 @@ class User
     }
 
     public function isDoctor() {
-        return $this->isDoctor;
+        return $this->isDoctor === '1';
     }
 
     public function setPostcode($postcode) {
