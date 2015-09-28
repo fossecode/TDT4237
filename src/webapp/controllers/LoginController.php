@@ -38,6 +38,10 @@ class LoginController extends Controller
                 $_SESSION['isadmin'] = "yes";
             }
 
+            if ($this->auth->user()->isDoctor()){
+                $_SESSION['isdoctor'] = "yes";
+            }
+
             $this->app->flash('info', "You are now successfully logged in as $user.");
             $this->app->redirect('/');
             return;

@@ -67,4 +67,40 @@ class AdminController extends Controller
         $this->app->flash('info', "An error ocurred. Unable to delete post.");
         $this->app->redirect('/');
     }
+
+    public function makeDoctor($userId)
+    {
+        if ($this->auth->isAdmin()) {
+            $csrfToken = $this->app->request->get("token");
+            $validation = new Validation($csrfToken);
+            if($validation->isGoodToGo()){
+                if ($this->userRepository->makeDoctor($userId)) {
+                    $this->app->flash('info', "Sucessfully made a doctor.");
+                    $this->app->redirect('/admin');
+                    return;
+                }
+            }
+        }
+
+        $this->app->flash('info', "An error ocurred. Unable to make a doctor.");
+        $this->app->redirect('/');
+    }
+
+    public function removeDoctor($userId)
+    {
+        if ($this->auth->isAdmin()) {
+            $csrfToken = $this->app->request->get("token");
+            $validation = new Validation($csrfToken);
+            if($validation->isGoodToGo()){
+                if ($this->userRepository->removeDoctor($userId)) {
+                    $this->app->flash('info', "Sucessfully unmade a doctor.");
+                    $this->app->redirect('/admin');
+                    return;
+                }
+            }
+        }
+
+        $this->app->flash('info', "An error ocurred. Unable to unmake a doctor.");
+        $this->app->redirect('/');
+    }
 }
