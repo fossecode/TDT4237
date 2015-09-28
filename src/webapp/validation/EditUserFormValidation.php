@@ -5,13 +5,13 @@ namespace tdt4237\webapp\validation;
 class EditUserFormValidation extends Validation
 {
     
-    public function __construct($email, $bio, $age, $fullname, $address, $postcode, $csrfToken)
+    public function __construct($email, $bio, $age, $fullname, $address, $postcode, $csrfToken, $accountNumber)
     {
         parent::__construct($csrfToken);
-        $this->validate($email, $bio, $age, $fullname, $address, $postcode);
+        $this->validate($email, $bio, $age, $fullname, $address, $postcode, $accountNumber);
     }
 
-    private function validate($email, $bio, $age, $fullname, $address, $postcode)
+    private function validate($email, $bio, $age, $fullname, $address, $postcode, $accountNumber)
     {
         $this->validateEmail($email);
         $this->validateAge($age);
@@ -19,6 +19,7 @@ class EditUserFormValidation extends Validation
         $this->validateFullname($fullname);
         $this->validateAddress($address);
         $this->validatePostcode($postcode);
+        $this->validateAccountNumber($accountNumber);
     }
     
     private function validateEmail($email)
@@ -68,6 +69,18 @@ class EditUserFormValidation extends Validation
 
         if (strlen($postcode) != 4) {
             $this->validationErrors[] = "Post code must be exactly four digits";
+        }
+    }
+
+    private function validateAccountNumber($accountNumber)
+    {
+
+        if(! is_numeric($accountNumber)){
+            $this->validationErrors[] = "Account number must be digits only";
+        }
+
+        if (strlen($accountNumber) != 11 || strlen($accountNumber) != 0) {
+            $this->validationErrors[] = "Account number must be exactly 11 digits";
         }
     }     
 }

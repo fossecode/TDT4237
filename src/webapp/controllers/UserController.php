@@ -118,8 +118,9 @@ class UserController extends Controller
         $address = $request->post('address');
         $postcode = $request->post('postcode');
         $csrfToken = $request->post('csrf');
+        $accountNumber = str_replace(".", "", $request->post('accountNumber'));
 
-        $validation = new EditUserFormValidation($email, $bio, $age, $fullname, $address, $postcode, $csrfToken);
+        $validation = new EditUserFormValidation($email, $bio, $age, $fullname, $address, $postcode, $csrfToken, $accountNumber);
 
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));
@@ -128,6 +129,7 @@ class UserController extends Controller
             $user->setFullname($fullname);
             $user->setAddress($address);
             $user->setPostcode($postcode);
+            $user->setAccountNumber($accountNumber);
             $this->userRepository->save($user);
 
             $this->app->flashNow('info', 'Your profile was successfully saved.');

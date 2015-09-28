@@ -55,6 +55,7 @@ $app->commentRepository = new CommentRepository($app->db, $app->userRepository);
 $app->throttleRepository = new ThrottleRepository($app->db);
 $app->auth = new Auth($app->userRepository, $app->hash);
 $app->throttling = new Throttling($app->throttleRepository);
+$app->paymentRepository = new PaymentRepository($app->db);
 
 $ns ='tdt4237\\webapp\\controllers\\';
 

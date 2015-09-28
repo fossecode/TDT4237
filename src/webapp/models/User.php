@@ -16,6 +16,7 @@ class User
     protected $age = null;
     protected $isAdmin = 0;
     protected $isDoctor = 0;
+    protected $accountNumber = null;
 
     function __construct($username, $hash, $fullname, $address, $postcode)
     {
@@ -66,6 +67,10 @@ class User
 
     public function getAddress() {
         return $this->address;
+    }
+
+    public function getAccountNumber(){
+        return $this->accountNumber;
     }
 
     public function setAddress($address) {
@@ -125,6 +130,11 @@ class User
     {
         $this->age = $age;
         return $this;
+    }
+
+    public function setAccountNumber($accountNumber)
+    {
+        $this->accountNumber = $accountNumber;
     }
 
     public function setIsAdmin($isAdmin)

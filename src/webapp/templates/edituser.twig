@@ -30,6 +30,10 @@
 
         <label>Age:</label>
         <input type="number" max="130" min="0" name="age" value="{{ user.age|escape }}"> <br />
+
+        <label>Account number:</label>
+        <input type="text"  name="accountNumber" minlength="11" maxlength="13" value="{{ user.accountNumber|escape }}"> <br />
+        
         <input type="text" name="csrf" hidden value="{{ csrf }}">
 
         <input type="submit" name="submit" value="Save profile">
