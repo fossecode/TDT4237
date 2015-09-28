@@ -10,6 +10,9 @@
 	    
 	        <div class="post">
 	            <a href="/posts/{{ post.postId|escape }}">{{ post.title|escape}}</a> by  <a href="/user/{{ post.user.userid|escape }}"> {{ post.user.username|escape }}</a>. Posted on {{ post.date|escape }}
+	            {% if post.isAnsweredByDoc %}
+	            <b>Answered by doctor.</b>
+    			{% endif %}
 	        </div>
         
         	{% endif %}
@@ -21,6 +24,9 @@
 	    	
 	        <div class="post">
 	            <a href="/posts/{{ post.postId|escape }}">{{ post.title|escape}}</a> by  <a href="/user/{{ post.user.userid|escape }}"> {{ post.user.username|escape }}</a>. Posted on {{ post.date|escape }}
+	            {% if post.isAnsweredByDoc %}
+	            <b>Answered by doctor.</b>
+    			{% endif %}
 	        </div>
 	        
 		{% else %}

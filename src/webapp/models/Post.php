@@ -15,6 +15,7 @@ class Post
     protected $title;
     protected $content;
     protected $date;
+    protected $answeredByDoc;
 
     public function getPostId() {
         return $this->postId;
@@ -70,6 +71,15 @@ class Post
         if($this->user->getAccountNumber() == null || $this->user->getAccountNumber() == "")
             return false;
         return true;
+    }
+
+    public function setAnsweredByDoc($bool){
+        $this->answeredByDoc = $bool;
+        return $this;
+    }
+
+    public function isAnsweredByDoc(){
+        return $this->answeredByDoc;
     }
 
 }

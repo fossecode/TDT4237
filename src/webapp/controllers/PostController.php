@@ -68,6 +68,11 @@ class PostController extends Controller
                 $comment->setDate(date ("Y-m-d H:i:s"));
                 $comment->setPost($postId);
                 $this->commentRepository->save($comment);
+
+                if($user->isDoctor()){
+                    $this->paymentRepository->insertPayment($user->getUserId(), $postId);
+                }
+                
                 $this->app->redirect('/posts/' . $postId);
             }
 

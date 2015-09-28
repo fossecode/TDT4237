@@ -8,8 +8,8 @@ use tdt4237\webapp\models\PostCollection;
 
 class PostRepository
 {
-    const SELECT_POST   = "SELECT * FROM posts NATURAL JOIN users WHERE postId = ?;";
-    const ALL_POSTS     = "SELECT * FROM posts NATURAL JOIN users;";
+    const SELECT_POST   = "SELECT p.postId, content, title, userId, timestamp, doctorId FROM posts as p NATURAL JOIN users LEFT JOIN payments ON p.postId = payments.postId WHERE p.postId = ?;";
+    const ALL_POSTS     = "SELECT p.postId, content, title, userId, timestamp, doctorId FROM posts as p NATURAL JOIN users LEFT JOIN payments ON p.postId = payments.postId;";
     const DELETE_POST   = "DELETE FROM posts WHERE postId = ?;";
     const INSERT_POST   = "INSERT INTO posts (title, userId, content, timestamp) VALUES (?,?,?,?)";
 
@@ -25,7 +25,7 @@ class PostRepository
         $this->userRepository = $userRepository;
     }
     
-    public static function create($id, $title, $content, $date, $user)
+    public static function create($id, $title, $content, $date, $user, $answeredByDoc)
     {
         $post = new Post;
         
@@ -34,7 +34,8 @@ class PostRepository
             ->setUser($user)
             ->setTitle($title)
             ->setContent($content)
-            ->setDate($date);
+            ->setDate($date)
+            ->setAnsweredByDoc($answeredByDoc);
     }
 
     public function find($postId)
@@ -77,12 +78,14 @@ class PostRepository
 
     public function makeFromRow($row)
     {
+        isset($row['doctorId']) ? $answeredByDoc = true : $answeredByDoc = false;
         return static::create(
             $row['postId'],
             $row['title'],
             $row['content'],
             $row['timestamp'],
-            $this->userRepository->findByUserId($row['userId'])
+            $this->userRepository->findByUserId($row['userId']),
+            $answeredByDoc
         );
     }
 

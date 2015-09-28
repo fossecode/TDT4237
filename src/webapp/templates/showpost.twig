@@ -10,6 +10,9 @@
     </ul>
     {% endif %}
     {% if post %}
+        {% if post.isAnsweredByDoc %}
+            <b>This post has been answered by a doctor </b>
+        {% endif %} 
         <h2>{{ post.title|escape}}</h2>
         <h3> by {{post.user.username|escape}} @ {{post.date|escape}}</h3>
         <p> {{ post.content|escape }}</p>

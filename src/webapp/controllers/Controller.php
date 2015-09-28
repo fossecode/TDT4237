@@ -17,6 +17,7 @@ class Controller
         $this->userRepository = $this->app->userRepository;
         $this->postRepository = $this->app->postRepository;
         $this->commentRepository = $this->app->commentRepository;
+        $this->paymentRepository = $this->app->paymentRepository;
         $this->auth = $this->app->auth;
         $this->hash = $this->app->hash;
     }
