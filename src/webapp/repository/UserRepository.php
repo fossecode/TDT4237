@@ -17,6 +17,7 @@ class UserRepository
     const DELETE_BY_ID      = "DELETE FROM users WHERE userId=?";
     const SELECT_ALL        = "SELECT * FROM users";
     const FIND_FULL_NAME    = "SELECT * FROM users WHERE userId=?";
+    const SET_DOCTOR       = "UPDATE users SET isdoctor =? WHERE userId =?";
 
     /**
      * @var PDO
@@ -124,6 +125,19 @@ class UserRepository
     {
         $stmt = $this->pdo->prepare(self::UPDATE_QUERY);
         return $stmt->execute(array($user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getUserId()));
+    }
+
+
+    public function makeDoctor($userId)
+    {
+        $stmt = $this->pdo->prepare(self::SET_DOCTOR);
+        return $stmt->execute(array(1,$userId));
+    }
+
+    public function makeDoctor($userId)
+    {
+        $stmt = $this->pdo->prepare(self::SET_DOCTOR);
+        return $stmt->execute(array(0,$userId));
     }
 
 }
