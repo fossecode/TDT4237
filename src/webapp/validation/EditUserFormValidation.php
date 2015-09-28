@@ -75,7 +75,7 @@ class EditUserFormValidation extends Validation
     private function validateAccountNumber($accountNumber)
     {
         
-        if(! is_numeric($accountNumber)){
+        if(! is_numeric($accountNumber) && ! isset($accountNumber)){
             $this->validationErrors[] = "Account number must be digits only";
         }
 
