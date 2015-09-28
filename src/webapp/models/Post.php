@@ -65,4 +65,11 @@ class Post
     public function getTitle() {
         return $this->title;
     }
+
+    public function isPaymentPost(){
+        if($this->user->accountNumber == null || $this->user->accountNumber == "")
+            return false;
+        return true;
+    }
+
 }

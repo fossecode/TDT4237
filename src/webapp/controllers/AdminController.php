@@ -77,6 +77,7 @@ class AdminController extends Controller
                 if ($this->userRepository->makeDoctor($userId)) {
                     $this->app->flash('info', "Sucessfully made a doctor.");
                     $this->app->redirect('/admin');
+                    
                     return;
                 }
             }
