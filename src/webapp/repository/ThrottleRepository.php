@@ -20,6 +20,10 @@ class ThrottleRepository implements RepositoryInterface
         $this->pdo = $pdo;
     }
 
+    public function find($id) { }
+    public function save($throttleEntry) { }
+    public function remove($id) { }
+
     public function makeThrottleEntryFromRow(array $row)
     {
         return new ThrottleEntry($row['userId'], $row['ip'], $row['timestamp']);
