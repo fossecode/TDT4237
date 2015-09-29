@@ -3,8 +3,9 @@ namespace tdt4237\webapp\repository;
 
 use PDO;
 use tdt4237\webapp\models\ThrottleEntry;
+use tdt4237\webapp\repository\RepositoryInterface;
 
-class ThrottleRepository
+class ThrottleRepository implements RepositoryInterface
 {
     const INSERT_QUERY   = "INSERT INTO throttling(userId, ip, timestamp) VALUES(?, ?, ?)";
     const FIND_ALL_BY_IP = "SELECT * FROM throttling WHERE ip = ?";
