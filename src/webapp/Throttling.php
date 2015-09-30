@@ -1,6 +1,7 @@
 <?php
 
 namespace tdt4237\webapp;
+use tdt4237\webapp\repository\RepositoryInterface;
 use tdt4237\webapp\repository\ThrottleRepository;
 use tdt4237\webapp\models\ThrottleEntry;
 
@@ -14,7 +15,7 @@ class Throttling
      */
     private $throttleRepository;
 
-    public function __construct(ThrottleRepository $throttleRepository)
+    public function __construct(RepositoryInterface $throttleRepository)
     {
         $this->throttleRepository = $throttleRepository; 
     }
@@ -25,15 +26,19 @@ class Throttling
         $this->throttleRepository->saveNewEntry($entry);
     }
 
-    public function calculatePenalty($throttleEntries) {
-        # This method needs a better algorithm for calculating
-        # the amount of seconds the penalty should last.
-        # I propose that we check the date close to now
-        # and exponentionally increase the seconds.
-        $secondsPenalty = 0;
-        foreach ($throttleEntries as $throttleEntry) {
-            $secondsPenalty += 1;
-        }
+    public function isAttemptToday($throttleEntry) {
+        return date('Ymd', strtotime($throttleEntry->getTimestamp())) == date('Ymd');
+    }
+
+    public function calculatePenalty($throttleEntriesForAnIP) {
+        $attemptsToday = array_filter($throttleEntriesForAnIP, array($this, 'isAttemptToday'));
+        $numberOfAttempts = count($attemptsToday);
+
+        if ($numberOfAttempts < 3)
+            $secondsPenalty = 0;
+        else
+            $secondsPenalty = pow($numberOfAttempts, 2);
+
         return $secondsPenalty; 
     }
 
