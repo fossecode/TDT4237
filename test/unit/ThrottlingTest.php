@@ -1,6 +1,6 @@
 <?php
-require dirname('.').'/src/webapp/Throttling.php';
-require dirname('.').'/src/webapp/repository/RepositoryInterface.php';
+require dirname('..').'/src/webapp/Throttling.php';
+require dirname('..').'/src/webapp/repository/RepositoryInterface.php';
 
 use tdt4237\webapp\Throttling;
 use tdt4237\webapp\models\ThrottleEntry;
