@@ -25,6 +25,8 @@
         "up": "tdt4237\\webapp\\Sql::up"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.6"
+        "phpunit/phpunit": "~4.6",
+        "rmccue/requests": ">=1.0"
+
     }
 }
