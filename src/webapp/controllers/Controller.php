@@ -28,7 +28,12 @@ class Controller
             $variables['isLoggedIn'] = true;
             $variables['isAdmin'] = $this->auth->isAdmin();
             $variables['loggedInUsername'] = $_SESSION['user'];
-            $variables['balance'] = $this->paymentRepository->getDoctorPayments($_SESSION['userId']);
+            $user = $this->userRepository->findByUserId($_SESSION['userId']);
+            if($user->isDoctor()){
+                $variables['balance'] = $this->paymentRepository->getDoctorPayments($_SESSION['userId']);
+            } else if($this->paymentRepository->getUserPayments($user->getUserId()) !== 0){
+                $variables['balance'] = $this->paymentRepository->getUserPayments($user->getUserId());
+            }
         }
         $variables['csrf'] = $_SESSION['CSRF_token'];
 
