@@ -35,6 +35,7 @@ class PostController extends Controller
         $comments = $this->commentRepository->findByPostId($postId);
         $request = $this->app->request;
         $message = $request->get('msg');
+        $user = $this->userRepository->findByUserId($_SESSION['userId']);
 
         if($message) {
             $variables['msg'] = $message;
@@ -43,7 +44,8 @@ class PostController extends Controller
         $this->render('showpost.twig', [
             'post' => $post,
             'comments' => $comments,
-            'flash' => $variables
+            'flash' => $variables,
+            'user' => $user
         ]);
 
     }
@@ -89,9 +91,9 @@ class PostController extends Controller
     {
 
         if ($this->auth->check()) {
-            $username = $_SESSION['user'];
+            $user = $this->userRepository->findByUserId($_SESSION['userId']);
             $this->render('createpost.twig', [
-                'username' => $username
+                'user' => $user
             ]);
         } else {
 

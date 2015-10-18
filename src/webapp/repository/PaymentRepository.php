@@ -26,7 +26,8 @@ class PaymentRepository
     public function getDoctorPayments ($doctorId){
     	$stmt = $this->pdo->prepare(self::DOCTOR_ANSWER_COUNT);
     	$stmt->execute(array($doctorId));
-        //RETURN DATA
+        $result = $stmt->fetchColumn();
+        return ($result *7); # every answer is 7$.
     }
 
     public function getUserPayments ($userId){

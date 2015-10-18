@@ -28,6 +28,7 @@ class Controller
             $variables['isLoggedIn'] = true;
             $variables['isAdmin'] = $this->auth->isAdmin();
             $variables['loggedInUsername'] = $_SESSION['user'];
+            $variables['balance'] = $this->paymentRepository->getDoctorPayments($_SESSION['userId']);
         }
         $variables['csrf'] = $_SESSION['CSRF_token'];
 
