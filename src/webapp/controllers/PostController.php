@@ -19,13 +19,18 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = $this->postRepository->all();
-        $posts->sortByDate();
-        $user = $this->userRepository->findByUserId($_SESSION['userId']);
-        $this->render('posts.twig', [
-            'posts' => $posts,
-            'user' => $user
-        ]);
+        if($this->auth->guest()){
+            $this->app->redirect('/');
+        }
+        else{
+            $posts = $this->postRepository->all();
+            $posts->sortByDate();
+            $user = $this->userRepository->findByUserId($_SESSION['userId']);
+            $this->render('posts.twig', [
+                'posts' => $posts,
+                'user' => $user
+            ]); 
+        }
 
     }
 
