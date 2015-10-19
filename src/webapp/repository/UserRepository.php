@@ -62,6 +62,13 @@ class UserRepository
 
     public function findByUserId($userId)
     {
+        try{
+            $userId = (int) $userId;
+        }
+        catch(Exception $e) {
+            return false;
+        }
+
         $stmt = $this->pdo->prepare(self::FIND_BY_ID);
         $stmt->execute(array($userId));
         $row = $stmt->fetch();
