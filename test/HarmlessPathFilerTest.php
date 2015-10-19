@@ -66,7 +66,7 @@ class HarmlessPathFilterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($path->getExtensionFromPath(), false);
     }
 
-    public function testShouldReturnFalseIfQueryStringEndsWithDotJPG()
+    public function testShouldReturnFalseIfQueryStringEndsWithJPG()
     {
         $path = new HarmlessPathFilter('http://website.com/files/image.sql?id=querystring-ends-with-jpg');
         $this->assertEquals($path->isHarmless(), false);
