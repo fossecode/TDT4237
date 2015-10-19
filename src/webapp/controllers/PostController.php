@@ -94,6 +94,10 @@ class PostController extends Controller
 
     public function showNewPostForm()
     {
+        if($this->auth->idDoctor()){
+            $this->app->redirect("/");
+            return;
+        }
 
         if ($this->auth->check()) {
             $user = $this->userRepository->findByUserId($_SESSION['userId']);

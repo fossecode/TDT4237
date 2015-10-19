@@ -32,7 +32,9 @@
                     {% endif %}
                     <a href ="{{ urlFor('showposts') }}"> Show posts</a> <br>
                     <a href="{{ urlFor('editprofile') }}">Edit profile</a> <br>
+                    {% if not user.isDoctor %}
                     <a href="{{ urlFor('createpost') }}"> Create new post</a><br>
+                    {% endif %}
                     <a href="{{ urlFor('logout') }}">Log out</a> <br>
                 {% else %}
                     <a href="{{ urlFor('newuser') }}">Create user</a> <br />
