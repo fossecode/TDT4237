@@ -23,6 +23,13 @@
             <div id="navbar">
                 {% if isLoggedIn %}
                     Logged in as {{ loggedInUsername|escape }}.<br>
+                    {% if balance is defined %}
+                    {% if user.isDoctor %}
+                    Current income balance is: ${{ balance }}<br>
+                    {% else %}
+                    Amount spent on doctor questions: ${{ balance }}<br>
+                    {% endif %}
+                    {% endif %}
                     <a href ="{{ urlFor('showposts') }}"> Show posts</a> <br>
                     <a href="{{ urlFor('editprofile') }}">Edit profile</a> <br>
                     <a href="{{ urlFor('createpost') }}"> Create new post</a><br>

@@ -26,13 +26,15 @@ class PaymentRepository
     public function getDoctorPayments ($doctorId){
     	$stmt = $this->pdo->prepare(self::DOCTOR_ANSWER_COUNT);
     	$stmt->execute(array($doctorId));
-        //RETURN DATA
+        $result = $stmt->fetchColumn();
+        return ($result *7); # every answer is 7$.
     }
 
     public function getUserPayments ($userId){
     	$stmt = $this->pdo->prepare(self::USER_PAYMENT_COUNT);
     	$stmt->execute(array($userId));
-        //RETURN DATA
+        $result = $stmt->fetchColumn();
+        return ($result * 10); # every question cost 10$
     }
 
     public function insertPayment ($doctorId, $postId){
