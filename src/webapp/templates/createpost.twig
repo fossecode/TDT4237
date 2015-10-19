@@ -18,6 +18,7 @@
 
         <label>Text:</label>
         <textarea cols="40" rows="10" name="content"> </textarea><br />
+        <label>Do you want a doctor to answer? ($10)</label><input type="checkbox" name="doctor" value="true"><br>
         <input type="submit" name="submit" value="Create post">
         <input type="text" name="csrf" hidden value="{{ csrf }}">
     </form>
