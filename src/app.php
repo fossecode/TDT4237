@@ -83,7 +83,7 @@ $app->post('/forgot', $ns . 'ForgotPasswordController:submitEmail');
 $app->get('/user/:userId', $ns . 'UserController:show')->name('showuser');
 
 // Show all users
-$app->get('/users', $ns . 'UserController:all');
+//$app->get('/users', $ns . 'UserController:all');
 
 // Posts
 $app->get('/posts/new', $ns . 'PostController:showNewPostForm')->name('createpost');
