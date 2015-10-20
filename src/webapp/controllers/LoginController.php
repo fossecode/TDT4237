@@ -47,7 +47,7 @@ class LoginController extends Controller
             $this->app->redirect('/');
             return;
         } else if ($csrf_check) {
-            return $csrf_check($user);
+            return print $csrf_check($user);
         } else {
 
             # Throttle failed login attempts
