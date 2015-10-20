@@ -138,9 +138,8 @@ class PostController extends Controller
                 $this->app->redirect('/posts/' . $savedPost . '?msg=Post succesfully posted');
             }
         }
-
             $this->app->flashNow('errors', $validation->getValidationErrors());
-            $this->app->render('createpost.twig');
+            $this->render('createpost.twig');
             // RENDER HERE
 
     }
