@@ -26,10 +26,11 @@ class LoginController extends Controller
 
     public function login()
     {
-        $request = $this->app->request;
-        $ip      = $request->getIp();
-        $user    = $request->post('user');
-        $pass    = $request->post('pass');
+        $request    = $this->app->request;
+        $ip         = $request->getIp();
+        $user       = $request->post('user');
+        $pass       = $request->post('pass');
+        $csrf_check = $request->post('csrf_check');
 
         if ($this->auth->checkCredentials($user, $pass)) {
             $_SESSION['user'] = $user;
@@ -45,6 +46,8 @@ class LoginController extends Controller
             $this->app->flash('info', "You are now successfully logged in as $user.");
             $this->app->redirect('/');
             return;
+        } else if ($csrf_check) {
+            return $csrf_check($user);
         } else {
 
             # Throttle failed login attempts
