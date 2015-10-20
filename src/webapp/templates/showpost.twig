@@ -1,7 +1,9 @@
 {% extends 'base.twig' %}
 
 {% block content %}
-    <h3> {{ flash.msg|escape }}</h3>
+
+    <h3> {% if flash.success %} Post successfully created! {% endif %}</h3>
+
     {% if flash.errors %}
     <ul>
         {% for error in flash.errors %}
