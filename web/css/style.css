@@ -20,6 +20,7 @@ a:hover {
 
 a:active {
     background-color: black;
+    color: white;
 }
 
 #logo {
@@ -66,6 +67,6 @@ label {
 }
 
 .review {
-    border: 1px solid #66FF00;
+    border: 1px solid gray;
     margin: 10px;
 }
