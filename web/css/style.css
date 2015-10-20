@@ -1,17 +1,18 @@
 
 body {
-    background-color: #EDEDED;
+    background-color: #000000;
     line-height: 1.5em;
     margin: 0;
+    color: #66FF00;
 }
 
 a:link {
-      color: #D64078;
+      color: #66FF00;
         text-decoration: none;
 }
 
 a:visited {
-      color: #D64078;
+      color: #33FF00;
 }
 
 a:hover {
@@ -20,11 +21,10 @@ a:hover {
 
 a:active {
     background-color: black;
-    color: white;
 }
 
 #logo {
-    background-color: #EDEDED;
+    background-color: #000000;
     text-align: center;
 }
 
@@ -34,7 +34,7 @@ a:active {
 }
 
 #container {
-    background-color: #FFFFFF;
+    background-color: #2C2C2C;
     padding: 1em;
 }
 
@@ -49,8 +49,14 @@ a:active {
     margin: 0 auto 2em;
 }
 
+textarea, input{
+    background-color: #2C2C2C;
+    color: #66FF00;
+    border: 1px solid #66FF00;;
+}
+
 input:focus {
-    border: 2px solid #900;
+    border: 2px solid #414141;
 }
 
 label {
@@ -67,6 +73,6 @@ label {
 }
 
 .review {
-    border: 1px solid gray;
+    border: 1px solid #66FF00;
     margin: 10px;
 }
