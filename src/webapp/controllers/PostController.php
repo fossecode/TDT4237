@@ -121,17 +121,19 @@ class PostController extends Controller
             $request = $this->app->request;
             $title = $request->post('title');
             $content = $request->post('content');
+            $doctorQuestion = $request->post('doctor');
             $csrfToken = $request->post('csrf');
             $user = $this->userRepository->findByUserId($_SESSION['userId']);
             $date = date("Y-m-d H:i:s");
 
-            $validation = new PostValidation($title, $user->getUsername(), $content, $csrfToken);
+            $validation = new PostValidation($title, $user, $content, $csrfToken, $doctorQuestion);
             if ($validation->isGoodToGo()) {
                 $post = new Post();
                 $post->setUser($user);
                 $post->setTitle($title);
                 $post->setContent($content);
                 $post->setDate($date);
+                $post->setPaidQuestion($doctorQuestion === 'true');
                 $savedPost = $this->postRepository->save($post);
                 $this->app->redirect('/posts/' . $savedPost . '?msg=Post succesfully posted');
             }
