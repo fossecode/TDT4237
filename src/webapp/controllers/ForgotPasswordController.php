@@ -16,7 +16,7 @@ class ForgotPasswordController extends Controller {
     function submitEmail() {
         $email = $this->app->request->post('email');
         if($email != "") {
-            $this->app->flash('info','Thank you! The password was sent to your email, if the email exists');
+            $this->app->flash('info','Thank you! The password was sent to your email, if the email exists.');
             $this->app->redirect('/');
             // Code that sends an email if email exists
         }
