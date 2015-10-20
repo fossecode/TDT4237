@@ -1,18 +1,17 @@
 
 body {
-    background-color: #000000;
+    background-color: #EDEDED;
     line-height: 1.5em;
     margin: 0;
-    color: #66FF00;
 }
 
 a:link {
-      color: #66FF00;
+      color: #D64078;
         text-decoration: none;
 }
 
 a:visited {
-      color: #33FF00;
+      color: #D64078;
 }
 
 a:hover {
@@ -24,7 +23,7 @@ a:active {
 }
 
 #logo {
-    background-color: #000000;
+    background-color: #EDEDED;
     text-align: center;
 }
 
@@ -34,7 +33,7 @@ a:active {
 }
 
 #container {
-    background-color: #2C2C2C;
+    background-color: #FFFFFF;
     padding: 1em;
 }
 
@@ -49,14 +48,8 @@ a:active {
     margin: 0 auto 2em;
 }
 
-textarea, input{
-    background-color: #2C2C2C;
-    color: #66FF00;
-    border: 1px solid #66FF00;;
-}
-
 input:focus {
-    border: 2px solid #414141;
+    border: 2px solid #900;
 }
 
 label {
