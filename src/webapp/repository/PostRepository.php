@@ -8,10 +8,10 @@ use tdt4237\webapp\models\PostCollection;
 
 class PostRepository
 {
-    const SELECT_POST   = "SELECT p.postId, content, title, userId, timestamp, doctorId FROM posts as p NATURAL JOIN users LEFT JOIN payments ON p.postId = payments.postId WHERE p.postId = ?;";
-    const ALL_POSTS     = "SELECT p.postId, content, title, userId, timestamp, doctorId FROM posts as p NATURAL JOIN users LEFT JOIN payments ON p.postId = payments.postId;";
+    const SELECT_POST   = "SELECT p.postId, content, title, userId, paidQuestion, timestamp, doctorId FROM posts as p NATURAL JOIN users LEFT JOIN payments ON p.postId = payments.postId WHERE p.postId = ?;";
+    const ALL_POSTS     = "SELECT p.postId, content, title, userId, paidQuestion, timestamp, doctorId FROM posts as p NATURAL JOIN users LEFT JOIN payments ON p.postId = payments.postId;";
     const DELETE_POST   = "DELETE FROM posts WHERE postId = ?;";
-    const INSERT_POST   = "INSERT INTO posts (title, userId, content, timestamp) VALUES (?,?,?,?)";
+    const INSERT_POST   = "INSERT INTO posts (title, userId, content, paidQuestion, timestamp) VALUES (?,?,?,?,?)";
 
     /**
      * @var PDO
@@ -25,7 +25,7 @@ class PostRepository
         $this->userRepository = $userRepository;
     }
     
-    public static function create($id, $title, $content, $date, $user, $answeredByDoc)
+    public static function create($id, $title, $content, $date, $user, $answeredByDoc, $paidQuestion)
     {
         $post = new Post;
         
@@ -35,7 +35,8 @@ class PostRepository
             ->setTitle($title)
             ->setContent($content)
             ->setDate($date)
-            ->setAnsweredByDoc($answeredByDoc);
+            ->setAnsweredByDoc($answeredByDoc)
+            ->setPaidQuestion($paidQuestion);
     }
 
     public function find($postId)
@@ -79,13 +80,16 @@ class PostRepository
     public function makeFromRow($row)
     {
         isset($row['doctorId']) ? $answeredByDoc = true : $answeredByDoc = false;
+        $paidQuestion = ($row['paidQuestion'] == 1)? true : false;
         return static::create(
             $row['postId'],
             $row['title'],
             $row['content'],
             $row['timestamp'],
             $this->userRepository->findByUserId($row['userId']),
-            $answeredByDoc
+            $answeredByDoc,
+            $paidQuestion
+            
         );
     }
 
@@ -102,10 +106,15 @@ class PostRepository
         $userId = $post->getUserId();
         $content = $post->getContent();
         $date    = $post->getDate();
+        if ($post->isPaidQuestion()){
+            $paidQuestion = 1;
+        } else {
+            $paidQuestion = 0;
+        }
 
         if ($post->getPostId() === null) {
             $stmt = $this->pdo->prepare(self::INSERT_POST);
-            $stmt->execute(array($title, $userId, $content, $date));
+            $stmt->execute(array($title, $userId, $content, $paidQuestion, $date));
         }
         return $this->pdo->lastInsertId();
     }

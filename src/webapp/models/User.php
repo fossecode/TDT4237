@@ -148,4 +148,10 @@ class User
         return $this;
     }
 
+    public function hasAccountNumber(){
+        if ($this->getAccountNumber() == null || $this->getAccountNumber() == "")
+            return false;
+        return true;
+    }
+
 }

@@ -7,9 +7,9 @@ use tdt4237\webapp\models\ThrottleEntry;
 use tdt4237\webapp\repository\RepositoryInterface;
 
 class ThrottleRepositoryMock implements RepositoryInterface {
-    public function find($id)   {}
-    public function save($id)   {}
-    public function remove($id) {}
+    public function find   ($id) {}
+    public function save   ($id) {}
+    public function remove ($id) {}
 }
 
 class ThrottlingTest extends PHPUnit_Framework_TestCase

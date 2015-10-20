@@ -76,17 +76,14 @@ $app->get('/user/edit', $ns . 'UserController:showUserEditForm')->name('editprof
 $app->post('/user/edit', $ns . 'UserController:receiveUserEditForm');
 
 // Forgot password
-$app->get('/forgot/:username', $ns . 'ForgotPasswordController:confirmForm');
 $app->get('/forgot', $ns . 'ForgotPasswordController:forgotPassword');
-
-$app->post('/forgot/:username', $ns . 'ForgotPasswordController:confirm');
-$app->post('/forgot', $ns . 'ForgotPasswordController:submitName');
+$app->post('/forgot', $ns . 'ForgotPasswordController:submitEmail');
 
 // Show a user by name
 $app->get('/user/:userId', $ns . 'UserController:show')->name('showuser');
 
 // Show all users
-$app->get('/users', $ns . 'UserController:all');
+//$app->get('/users', $ns . 'UserController:all');
 
 // Posts
 $app->get('/posts/new', $ns . 'PostController:showNewPostForm')->name('createpost');

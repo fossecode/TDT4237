@@ -19,13 +19,18 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = $this->postRepository->all();
-        $posts->sortByDate();
-        $user = $this->userRepository->findByUserId($_SESSION['userId']);
-        $this->render('posts.twig', [
-            'posts' => $posts,
-            'user' => $user
-        ]);
+        if($this->auth->guest()){
+            $this->app->redirect('/');
+        }
+        else{
+            $posts = $this->postRepository->all();
+            $posts->sortByDate();
+            $user = $this->userRepository->findByUserId($_SESSION['userId']);
+            $this->render('posts.twig', [
+                'posts' => $posts,
+                'user' => $user
+            ]); 
+        }
 
     }
 
@@ -35,6 +40,7 @@ class PostController extends Controller
         $comments = $this->commentRepository->findByPostId($postId);
         $request = $this->app->request;
         $message = $request->get('msg');
+        $user = $this->userRepository->findByUserId($_SESSION['userId']);
 
         if($message) {
             $variables['msg'] = $message;
@@ -43,7 +49,8 @@ class PostController extends Controller
         $this->render('showpost.twig', [
             'post' => $post,
             'comments' => $comments,
-            'flash' => $variables
+            'flash' => $variables,
+            'user' => $user
         ]);
 
     }
@@ -87,11 +94,15 @@ class PostController extends Controller
 
     public function showNewPostForm()
     {
+        if($this->auth->isDoctor()){
+            $this->app->redirect("/");
+            return;
+        }
 
         if ($this->auth->check()) {
-            $username = $_SESSION['user'];
+            $user = $this->userRepository->findByUserId($_SESSION['userId']);
             $this->render('createpost.twig', [
-                'username' => $username
+                'user' => $user
             ]);
         } else {
 
@@ -110,17 +121,19 @@ class PostController extends Controller
             $request = $this->app->request;
             $title = $request->post('title');
             $content = $request->post('content');
+            $doctorQuestion = $request->post('doctor');
             $csrfToken = $request->post('csrf');
             $user = $this->userRepository->findByUserId($_SESSION['userId']);
             $date = date("Y-m-d H:i:s");
 
-            $validation = new PostValidation($title, $user->getUsername(), $content, $csrfToken);
+            $validation = new PostValidation($title, $user, $content, $csrfToken, $doctorQuestion);
             if ($validation->isGoodToGo()) {
                 $post = new Post();
                 $post->setUser($user);
                 $post->setTitle($title);
                 $post->setContent($content);
                 $post->setDate($date);
+                $post->setPaidQuestion($doctorQuestion === 'true');
                 $savedPost = $this->postRepository->save($post);
                 $this->app->redirect('/posts/' . $savedPost . '?msg=Post succesfully posted');
             }

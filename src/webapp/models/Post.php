@@ -16,6 +16,7 @@ class Post
     protected $content;
     protected $date;
     protected $answeredByDoc;
+    protected $paidQuestion;
 
     public function getPostId() {
         return $this->postId;
@@ -80,6 +81,15 @@ class Post
 
     public function isAnsweredByDoc(){
         return $this->answeredByDoc;
+    }
+
+    public function setPaidQuestion($bool){
+        $this->paidQuestion = $bool;
+        return $this;
+    }
+
+    public function isPaidQuestion(){
+        return $this->paidQuestion;
     }
 
 }

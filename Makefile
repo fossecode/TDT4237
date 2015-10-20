@@ -6,6 +6,6 @@ test:
 	@$(RUNNER) $(TEST_DIR) $(PENETRATION_TARGET)
 
 serve:
-	@php composer.phar start
+	@php -S 0.0.0.0:8080 -t web web/index.php
 
 .PHONY: test 
