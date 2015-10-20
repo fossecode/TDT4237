@@ -36,6 +36,17 @@ class PostController extends Controller
 
     public function show($postId, $variables = [])
     {
+        if($this->auth->guest()){
+            $this->app->redirect("/");
+            return;
+        }
+
+        // Doctor should not see non-paid posts
+        if($this->auth->isDoctor() and !$this->postRepository->find($postId)->isPaidQuestion()){
+            $this->app->redirect("/posts");
+            return;
+        }
+
         $post = $this->postRepository->find($postId);
         $comments = $this->commentRepository->findByPostId($postId);
         $request = $this->app->request;
@@ -55,36 +66,42 @@ class PostController extends Controller
     public function addComment($postId)
     {
 
-        if(!$this->auth->guest()) {
-
-            $user = $this->userRepository->findByUserId($_SESSION['userId']);
-            $text = $this->app->request->post("text");
-            $csrfToken = $this->app->request->post("csrf");
-            $isPost = $this->postRepository->isPost($postId);
-
-            $validation = new CommentValidation($user, $text, $isPost, $csrfToken);
-            
-            if ($validation->isGoodToGo()) {
-
-                $comment = new Comment();
-                $comment->setUser($user);
-                $comment->setText($text);
-                $comment->setDate(date ("Y-m-d H:i:s"));
-                $comment->setPost($postId);
-                $this->commentRepository->save($comment);
-
-                if($user->isDoctor()){
-                    $this->paymentRepository->insertPayment($user->getUserId(), $postId);
-                }
-                
-                $this->app->redirect('/posts/' . $postId);
-            }
-
-            $this->show($postId, ['errors' => $validation->getValidationErrors()]);
-        }
-        else {
+        // Guests must login
+        if($this->auth->guest()) {
             $this->app->redirect('/login');
             $this->app->flash('info', 'You must log in to do that');
+        }
+        // Doctors should not be able to comment on not-paid questions
+        if($this->auth->isDoctor() and !$this->postRepository->find($postId)->isPaidQuestion()){
+            $this->app->redirect("/posts");
+            return;
+        }
+
+        $user = $this->userRepository->findByUserId($_SESSION['userId']);
+        $text = $this->app->request->post("text");
+        $csrfToken = $this->app->request->post("csrf");
+        $isPost = $this->postRepository->isPost($postId);
+
+        $validation = new CommentValidation($user, $text, $isPost, $csrfToken);
+        
+        if ($validation->isGoodToGo()) {
+
+            $comment = new Comment();
+            $comment->setUser($user);
+            $comment->setText($text);
+            $comment->setDate(date ("Y-m-d H:i:s"));
+            $comment->setPost($postId);
+            $this->commentRepository->save($comment);
+
+            if($user->isDoctor()){
+                $this->paymentRepository->insertPayment($user->getUserId(), $postId);
+            }
+            
+            $this->app->redirect('/posts/' . $postId);
+        }
+        else{
+
+            $this->show($postId, ['errors' => $validation->getValidationErrors()]);
         }
 
     }
