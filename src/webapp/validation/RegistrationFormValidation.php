@@ -19,8 +19,8 @@ class RegistrationFormValidation extends Validation
             $this->validationErrors[] = 'Password cannot be empty';
         }
 
-        if (strlen($password) < 6 || strlen($password) >= 50) {
-            $this->validationErrors[] = 'Password must be between 6 and 50 characters long.';
+        if (strlen($password) < 8 || strlen($password) >= 50) {
+            $this->validationErrors[] = 'Password must be between 8 and 50 characters long.';
         }
 
         if (empty($username)) {
