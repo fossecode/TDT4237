@@ -39,12 +39,9 @@ class PostController extends Controller
         $post = $this->postRepository->find($postId);
         $comments = $this->commentRepository->findByPostId($postId);
         $request = $this->app->request;
-        $message = $request->get('msg');
         $user = $this->userRepository->findByUserId($_SESSION['userId']);
 
-        if($message) {
-            $variables['msg'] = $message;
-        }
+        $variables['success'] = $request->get('success') == 'true';
 
         $this->render('showpost.twig', [
             'post' => $post,
@@ -135,7 +132,7 @@ class PostController extends Controller
                 $post->setDate($date);
                 $post->setPaidQuestion($doctorQuestion === 'true');
                 $savedPost = $this->postRepository->save($post);
-                $this->app->redirect('/posts/' . $savedPost . '?msg=Post succesfully posted');
+                $this->app->redirect('/posts/' . $savedPost . '?success=true');
             }
         }
 
