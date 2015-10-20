@@ -94,7 +94,7 @@ class PostController extends Controller
 
     public function showNewPostForm()
     {
-        if($this->auth->idDoctor()){
+        if($this->auth->isDoctor()){
             $this->app->redirect("/");
             return;
         }
