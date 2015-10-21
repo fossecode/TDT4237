@@ -22,7 +22,6 @@ if (++$_SESSION['request_counter'] >= 20) {
     $_SESSION['request_counter'] = 0;
     session_regenerate_id(true);
 }
-
 $app = new Slim([
     'templates.path' => __DIR__.'/webapp/templates/',
     'debug' => false,
@@ -30,7 +29,7 @@ $app = new Slim([
     'log.enabled' => true,
     'log.level' => \Slim\Log::DEBUG,
     'log.writer' => new \Slim\Logger\DateTimeFileWriter(array(
-        'path' => '/Users/michaelmcmillan/Prosjekter/TDT4237/log',
+        'path' => realpath(dirname(dirname(__FILE__))) . '/log',
         'name_format' => 'Y-m-d H:i:s',
         'message_format' => '%label% - %date% - %message%'
     ))
