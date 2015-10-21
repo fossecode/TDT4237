@@ -4,21 +4,28 @@
 
 <h2>New user</h2>
 
-<b>{{ flash.info}}</b> <br />
-<b>{{ flash.error }}</b> <br />
+<b>{{ flash.info|escape}}</b> <br />
+{% if flash.errors %}
+<ul>
+    {% for error in flash.errors %}
+        <li> {{ error|escape }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
 
 <form action="" method="POST">
 
     <label>Username: </label>
-    <input type="text" name="user" value="{{ username }}"> <br />
+    <input type="text" name="user" minlength="3" maxlength="50" value="{{ username|escape }}"> <br />
     <label>Password: </label>
-    <input type="text" name="pass"> <br />
+    <input type="password" name="pass" minlength="8" maxlength="50"> <br />
     <label>Full Name (Will not be visible for other users)</label>
     <input type="text" name = "fullname"><br/>
     <label>Address (Will not be visible for other users)</label>
     <input type ="text" name = "address"><br/>
     <label> Postcode (Only four digits please)</label>
-    <input type = "text" name = "postcode"><br/>
+    <input type = "number" minlength="4" maxlength="4" name = "postcode"><br/>
+    <input type="text" name="csrf" hidden value="{{ csrf }}">
     <input type="submit" name="submit" value="Create new user"> <br/>
 
 </form>

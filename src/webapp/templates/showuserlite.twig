@@ -5,31 +5,36 @@
 <h2>User</h2>
 
 {{ flash.info }} <br />
-{{ flash.error }} <br />
+{% if flash.errors %}
+<ul>
+    {% for error in flash.errors %}
+        <li> {{ error|escape }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
 
 {% if user %}
     <table>
         <tr>
             <th>Id</th>
-            <th>{{ user.userid|raw }}</th>
+            <th>{{ user.userid|escape }}</th>
             <tr></tr>
             <th>Username:</th>
-            <td>{{ user.username|raw }}</th>
+            <td>{{ user.username|escape }}</th>
             <tr></tr>
             <th>Bio:</th>
-            <td>{{ user.bio|raw }}</td>
+            <td>{{ user.bio|escape }}</td>
             <tr></tr>
             <th>Age:</th>
-            <td>{{ user.age|raw }}</td>
+            <td>{{ user.age|escape }}</td>
             <tr></tr>
-        <!-- PS: RMB4P!!! {{ user.hash|raw }} --></td>
 
 
 
 
     </table>
 {% else %}
-    Could not find a user with username "{{ username|raw }}".
+    Could not find a user with username "{{ username|escape }}".
 {% endif %}
 
 {% endblock %}

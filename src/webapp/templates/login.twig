@@ -4,14 +4,21 @@
 
 <h2>Login</h2>
 
-{{ flash.error}} <br />
-{{ flash.success|raw }}
+{% if flash.errors %}
+<ul>
+    {% for error in flash.errors %}
+        <li> {{ error|escape }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{{ flash.success|escape }}
 <form action="" method="POST">
 
 <label>Username: </label>
 <input type="text" name="user"> <br />
 <label>Password: </label>
-<input type="text" name="pass"> <br />
+<input type="password" name="pass"> <br />
+<input type="text" name="csrf" hidden value="{{ csrf }}">
 <input type="submit" name="submit" value="Log in">
 </form>
     <a href="/forgot">Forgot password</a>

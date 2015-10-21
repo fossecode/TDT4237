@@ -7,42 +7,40 @@ use tdt4237\webapp\models\Comment;
 
 class CommentRepository
 {
+    const INSERT_COMMENT    = "INSERT INTO comments (userId, text, timestamp, postId) VALUES (?,?,?,?);";
+    const GET_COMMENTS      = "SELECT * FROM comments NATURAL JOIN users WHERE postId = ?";
 
     /**
      * @var PDO
      */
-    private $db;
+    private $pdo;
+    private $userRepository;
 
-    const SELECT_BY_ID = "SELECT * FROM moviereviews WHERE id = %s";
-
-    public function __construct(PDO $db)
+    public function __construct(PDO $pdo, UserRepository $userRepository)
     {
-
-        $this->db = $db;
+        $this->pdo = $pdo;
+        $this->userRepository = $userRepository;
     }
 
     public function save(Comment $comment)
     {
         $id = $comment->getCommentId();
-        $author  = $comment->getAuthor();
-        $text    = $comment->getText();
+        $userId = $comment->getUserId();
+        $text = $comment->getText();
         $date = (string) $comment->getDate();
         $postid = $comment->getPost();
 
-
-
         if ($comment->getCommentId() === null) {
-            $query = "INSERT INTO comments (author, text, date, belongs_to_post) "
-                . "VALUES ('$author', '$text', '$date', '$postid')";
-            return $this->db->exec($query);
+            $stmt = $this->pdo->prepare(self::INSERT_COMMENT);
+            return $stmt->execute(array($userId, $text, $date, $postid));
         }
     }
 
     public function findByPostId($postId)
     {
-        $query   = "SELECT * FROM comments WHERE belongs_to_post = $postId";
-        $rows = $this->db->query($query)->fetchAll();
-
+        $stmt = $this->pdo->prepare(self::GET_COMMENTS);
+        $stmt->execute(array($postId));
+        $rows = $stmt->fetchAll();
         return array_map([$this, 'makeFromRow'], $rows);
     }
 
@@ -52,9 +50,9 @@ class CommentRepository
         
         return $comment
             ->setCommentId($row['commentId'])
-            ->setAuthor($row['author'])
+            ->setUser($this->userRepository->findByUserId($row['userId']))
             ->setText($row['text'])
-            ->setDate($row['date'])
-            ->setPost($row['belongs_to_post']);
+            ->setDate($row['timestamp'])
+            ->setPost($row['postId']);
     }
 }

@@ -1,17 +1,29 @@
 {% extends 'base.twig' %}
 
 {% block content %}
-    <h3> {{ flash.msg|raw }}</h3>
+
+    <h3> {% if flash.success %} Post successfully created! {% endif %}</h3>
+
+    {% if flash.errors %}
+    <ul>
+        {% for error in flash.errors %}
+            <li> {{ error|escape }}
+        {% endfor %}
+    </ul>
+    {% endif %}
     {% if post %}
-        <h2>{{ post.title}}</h2>
-        <h3> by {{post.author|raw}}</h3>
-        <p> {{ post.content }}</p>
+        {% if post.isAnsweredByDoc %}
+            <b>This post has been answered by a doctor </b>
+        {% endif %} 
+        <h2>{{ post.title|escape}}</h2>
+        <h3> by {{post.user.username|escape}} @ {{post.date|escape}}</h3>
+        <p> {{ post.content|escape }}</p>
         <lb></lb>
         <h2>COMMENTS</h2>
         {% for comment in comments %}
             <div class="review">
-                <b>Author:</b> {{ comment.author }} <b> posted on: {{ comment.date }} </b>
-                <pre> {{ comment.text|raw }}</pre>
+                <b>Author:</b> {{ comment.user.username|escape }} <b> posted on: {{ comment.date|escape }} </b>
+                <pre> {{ comment.text|escape }}</pre>
             </div>
         {% else %}
             <br>
@@ -23,6 +35,7 @@
         <p>Comment: </p>
         <form method="post" action="">
             <textarea cols="40" rows="10" name="text" ></textarea> <br />
+            <input type="text" name="csrf" hidden value="{{ csrf }}">
             <input type="submit" value="Submit comment" name="submit"></button>
         </form>
 

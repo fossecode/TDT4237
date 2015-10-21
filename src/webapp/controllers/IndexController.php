@@ -21,7 +21,15 @@ class IndexController extends Controller
   //      if ($msg) {
     //        $variables['flash']['info'] = $msg;
     //    }
+        if(!$this->auth->guest()) {
+            $user = $this->userRepository->findByUserId($_SESSION['userId']);
 
-        $this->render('index.twig');
+            $this->render('index.twig', [
+                'user' => $user
+            ]);
+        }
+        else {
+            $this->render('index.twig');
+        }
     }
 }

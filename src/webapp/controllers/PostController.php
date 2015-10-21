@@ -6,6 +6,7 @@ use tdt4237\webapp\models\Post;
 use tdt4237\webapp\controllers\UserController;
 use tdt4237\webapp\models\Comment;
 use tdt4237\webapp\validation\PostValidation;
+use tdt4237\webapp\validation\CommentValidation;
 
 class PostController extends Controller
 {
@@ -18,33 +19,35 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = $this->postRepository->all();
+        if($this->auth->guest()){
+            $this->app->redirect('/');
+        }
+        else{
+            $posts = $this->postRepository->all();
+            $posts->sortByDate();
+            $user = $this->userRepository->findByUserId($_SESSION['userId']);
+            $this->render('posts.twig', [
+                'posts' => $posts,
+                'user' => $user
+            ]); 
+        }
 
-        $posts->sortByDate();
-        $this->render('posts.twig', ['posts' => $posts]);
     }
 
-    public function show($postId)
+    public function show($postId, $variables = [])
     {
         $post = $this->postRepository->find($postId);
         $comments = $this->commentRepository->findByPostId($postId);
         $request = $this->app->request;
-        $message = $request->get('msg');
-        $variables = [];
+        $user = $this->userRepository->findByUserId($_SESSION['userId']);
 
-
-        if($message) {
-            $variables['msg'] = $message;
-
-        }
-
-
-
+        $variables['success'] = $request->get('success') == 'true';
 
         $this->render('showpost.twig', [
             'post' => $post,
             'comments' => $comments,
-            'flash' => $variables
+            'flash' => $variables,
+            'user' => $user
         ]);
 
     }
@@ -54,30 +57,53 @@ class PostController extends Controller
 
         if(!$this->auth->guest()) {
 
-            $comment = new Comment();
-            $comment->setAuthor($_SESSION['user']);
-            $comment->setText($this->app->request->post("text"));
-            $comment->setDate(date("dmY"));
-            $comment->setPost($postId);
-            $this->commentRepository->save($comment);
-            $this->app->redirect('/posts/' . $postId);
+            $user = $this->userRepository->findByUserId($_SESSION['userId']);
+            $text = $this->app->request->post("text");
+            $csrfToken = $this->app->request->post("csrf");
+            $isPost = $this->postRepository->isPost($postId);
+
+            $validation = new CommentValidation($user, $text, $isPost, $csrfToken);
+            
+            if ($validation->isGoodToGo()) {
+
+                $comment = new Comment();
+                $comment->setUser($user);
+                $comment->setText($text);
+                $comment->setDate(date ("Y-m-d H:i:s"));
+                $comment->setPost($postId);
+                $this->commentRepository->save($comment);
+
+                if($user->isDoctor()){
+                    $this->paymentRepository->insertPayment($user->getUserId(), $postId);
+                }
+                
+                $this->app->redirect('/posts/' . $postId);
+            }
+
+            $this->show($postId, ['errors' => $validation->getValidationErrors()]);
         }
         else {
             $this->app->redirect('/login');
-            $this->app->flash('info', 'you must log in to do that');
+            $this->app->flash('info', 'You must log in to do that');
         }
 
     }
 
     public function showNewPostForm()
     {
+        if($this->auth->isDoctor()){
+            $this->app->redirect("/");
+            return;
+        }
 
         if ($this->auth->check()) {
-            $username = $_SESSION['user'];
-            $this->render('createpost.twig', ['username' => $username]);
+            $user = $this->userRepository->findByUserId($_SESSION['userId']);
+            $this->render('createpost.twig', [
+                'user' => $user
+            ]);
         } else {
 
-            $this->app->flash('error', "You need to be logged in to create a post");
+            $this->app->flash('errors', ["You need to be logged in to create a post"]);
             $this->app->redirect("/");
         }
 
@@ -92,23 +118,25 @@ class PostController extends Controller
             $request = $this->app->request;
             $title = $request->post('title');
             $content = $request->post('content');
-            $author = $request->post('author');
-            $date = date("dmY");
+            $doctorQuestion = $request->post('doctor');
+            $csrfToken = $request->post('csrf');
+            $user = $this->userRepository->findByUserId($_SESSION['userId']);
+            $date = date("Y-m-d H:i:s");
 
-            $validation = new PostValidation($title, $author, $content);
+            $validation = new PostValidation($title, $user, $content, $csrfToken, $doctorQuestion);
             if ($validation->isGoodToGo()) {
                 $post = new Post();
-                $post->setAuthor($author);
+                $post->setUser($user);
                 $post->setTitle($title);
                 $post->setContent($content);
                 $post->setDate($date);
+                $post->setPaidQuestion($doctorQuestion === 'true');
                 $savedPost = $this->postRepository->save($post);
-                $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
+                $this->app->redirect('/posts/' . $savedPost . '?success=true');
             }
         }
-
-            $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
-            $this->app->render('createpost.twig');
+            $this->app->flashNow('errors', $validation->getValidationErrors());
+            $this->render('createpost.twig');
             // RENDER HERE
 
     }

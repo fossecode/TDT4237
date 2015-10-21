@@ -19,7 +19,7 @@ class UserController extends Controller
     public function index()
     {
         if ($this->auth->guest()) {
-            return $this->render('newUserForm.twig', []);
+            return $this->render('newUserForm.twig');
         }
 
         $username = $this->auth->user()->getUserName();
@@ -35,9 +35,9 @@ class UserController extends Controller
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
+        $csrfToken = $request->post('csrf');
 
-
-        $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode);
+        $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode, $csrfToken, $this->userRepository);
 
         if ($validation->isGoodToGo()) {
             $password = $password;
@@ -49,9 +49,11 @@ class UserController extends Controller
             return $this->app->redirect('/login');
         }
 
-        $errors = join("<br>\n", $validation->getValidationErrors());
-        $this->app->flashNow('error', $errors);
-        $this->render('newUserForm.twig', ['username' => $username]);
+        $errors = $validation->getValidationErrors();
+        $this->app->flashNow('errors', $errors);
+        $this->render('newUserForm.twig', [
+            'username' => $username
+        ]);
     }
 
     public function all()
@@ -67,29 +69,36 @@ class UserController extends Controller
         $this->app->redirect("/");
     }
 
-    public function show($username)
+    public function show($userId)
     {
         if ($this->auth->guest()) {
             $this->app->flash("info", "You must be logged in to do that");
             $this->app->redirect("/login");
-
-        } else {
-            $user = $this->userRepository->findByUser($username);
-
-            if ($user != false && $user->getUsername() == $this->auth->getUsername()) {
-
-                $this->render('showuser.twig', [
-                    'user' => $user,
-                    'username' => $username
-                ]);
-            } else if ($this->auth->check()) {
-
-                $this->render('showuserlite.twig', [
-                    'user' => $user,
-                    'username' => $username
-                ]);
-            }
+            return;
         }
+        
+        $user = $this->userRepository->findByUserId($userId);
+
+        if($user == false){
+            $this->app->redirect("/user/edit");
+            return;
+        }
+            
+        //Does the following check enough?
+        if ($user != false && $user->getUsername() == $this->auth->getUsername()) {
+
+            $this->render('showuser.twig', [
+                'user' => $user,
+                'username' => $user->getUsername()
+            ]);
+        } else if ($this->auth->check()) {
+
+            $this->render('showuserlite.twig', [
+                'user' => $user,
+                'username' => $user->getUsername()
+            ]);
+        }
+
     }
 
     public function showUserEditForm()
@@ -113,8 +122,12 @@ class UserController extends Controller
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
+        $csrfToken = $request->post('csrf');
+        $accountNumber = str_replace(".", "", $request->post('accountNumber'));
 
-        $validation = new EditUserFormValidation($email, $bio, $age);
+        $updateAccountNumber = (substr($accountNumber,0,6) != "******") && (! empty($accountNumber));
+
+        $validation = new EditUserFormValidation($email, $bio, $age, $fullname, $address, $postcode, $csrfToken, $accountNumber, $updateAccountNumber);
 
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));
@@ -123,14 +136,22 @@ class UserController extends Controller
             $user->setFullname($fullname);
             $user->setAddress($address);
             $user->setPostcode($postcode);
+            print_r($updateAccountNumber);
+            if($updateAccountNumber){
+                $user->setAccountNumber($accountNumber);
+                print_r("UPDAtING ACOC NOPERS");}
             $this->userRepository->save($user);
-
+            $this->auth->user = $user;
             $this->app->flashNow('info', 'Your profile was successfully saved.');
-            return $this->render('edituser.twig', ['user' => $user]);
+            return $this->render('edituser.twig',  [
+                'user' => $user
+            ]);
         }
 
-        $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
-        $this->render('edituser.twig', ['user' => $user]);
+        $this->app->flashNow('errors', $validation->getValidationErrors());
+        $this->render('edituser.twig', [
+            'user' => $user
+        ]);
     }
 
     public function makeSureUserIsAuthenticated()
@@ -140,4 +161,5 @@ class UserController extends Controller
             $this->app->redirect('/login');
         }
     }
+
 }

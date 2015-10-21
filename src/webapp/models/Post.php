@@ -11,11 +11,12 @@ namespace tdt4237\webapp\models;
 class Post
 {
     protected $postId;
-    protected $author;
+    protected $user;
     protected $title;
     protected $content;
     protected $date;
-
+    protected $answeredByDoc;
+    protected $paidQuestion;
 
     public function getPostId() {
         return $this->postId;
@@ -27,13 +28,17 @@ class Post
         return $this;
     }
 
-    public function getAuthor() {
-        return $this->author;
+    public function getUser() {
+        return $this->user;
     }
 
-    public function setAuthor($author) {
-        $this->author = $author;
+    public function setUser($user) {
+        $this->user = $user;
         return $this;
+    }
+
+    public function getUserId() {
+        return $this->user->getUserId();
     }
 
     public function getDate() {
@@ -63,9 +68,28 @@ class Post
         return $this->title;
     }
 
+    public function isPaymentPost(){
+        if($this->user->getAccountNumber() == null || $this->user->getAccountNumber() == "")
+            return false;
+        return true;
+    }
 
+    public function setAnsweredByDoc($bool){
+        $this->answeredByDoc = $bool;
+        return $this;
+    }
 
+    public function isAnsweredByDoc(){
+        return $this->answeredByDoc;
+    }
 
+    public function setPaidQuestion($bool){
+        $this->paidQuestion = $bool;
+        return $this;
+    }
 
+    public function isPaidQuestion(){
+        return $this->paidQuestion;
+    }
 
 }

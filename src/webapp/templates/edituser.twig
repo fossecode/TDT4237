@@ -5,25 +5,36 @@
     <h2>Edit profile</h2>
 
     <form action="" method="POST">
-        <div id="flasherror">{{ flash.error }}</div>
+        {% if flash.errors %}
+        <ul>
+            {% for error in flash.errors %}
+                <li> {{ error|escape }} </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
         <label>Full name:</label>
-        <input type = "text" name="fullname" value= "{{ user.fullname }}"> <br />
+        <input type = "text" name="fullname" value= "{{ user.fullname|escape }}"> <br />
 
         <label>Address:</label>
-        <input type = "text" name="address" value= "{{ user.address }}"> <br />
+        <input type = "text" name="address" value= "{{ user.address|escape }}"> <br />
 
         <label>Postcode:</label>
-        <input type = "text" name="postcode"  value= "{{ user.postcode }}"> <br />
+        <input type = "number" name="postcode" maxlength="4" minlength="4" value= "{{ user.postcode|escape }}"> <br />
 
         <label>Email:</label>
-        <input type="text" name="email" value="{{ user.email|raw}}"> <br />
+        <input type="email" name="email" value="{{ user.email|escape }}"> <br />
 
         <label>Bio:</label>
-        <textarea name="bio">{{ user.bio }}</textarea>
+        <textarea name="bio">{{ user.bio|escape }}</textarea>
 
         <label>Age:</label>
-        <input type="text" name="age" value="{{ user.age }}"> <br />
+        <input type="number" max="130" min="0" name="age" value="{{ user.age|escape }}"> <br />
+
+        <label>Account number:</label>
+        <input type="text"  name="accountNumber" minlength="11" maxlength="13" value="{{ user.accountNumber|obfuscateAccountNumber }}"> <br />
+        
+        <input type="text" name="csrf" hidden value="{{ csrf }}">
 
         <input type="submit" name="submit" value="Save profile">
     </form>

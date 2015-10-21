@@ -27,11 +27,13 @@ class Auth
 
     public function checkCredentials($username, $password)
     {
-        $user = $this->userRepository->findByUser($username);
-
+        $user = $this->userRepository->findByUsername($username);
         if ($user === false) {
             return false;
         }
+
+        //Set user id as session variable
+        $_SESSION['userId'] = $user->getUserId();
 
         return $this->hash->check($password, $user->getHash());
     }
@@ -46,7 +48,7 @@ class Auth
 
     public function getUsername() {
         if(isset($_SESSION['user'])){
-        return $_SESSION['user'];
+            return $_SESSION['user'];
         }
     }
 
@@ -63,10 +65,9 @@ class Auth
      */
     public function user()
     {
-        if ($this->check()) {
-            return $this->userRepository->findByUser($_SESSION['user']);
-        }
-
+        if ($this->check())
+            return $this->userRepository->findByUsername($_SESSION['user']);
+        
         throw new Exception('Not logged in but called Auth::user() anyway');
     }
 
@@ -76,17 +77,32 @@ class Auth
     public function isAdmin()
     {
         if ($this->check()) {
-            return $_COOKIE['isadmin'] === 'yes';
-        }
+            if(isset($_SESSION['isadmin']))
+                return $_SESSION['isadmin'] === 'yes';
+        } 
+        
+        return false;
 
-        throw new Exception('Not logged in but called Auth::isAdmin() anyway');
+        //throw new Exception('Not logged in but called Auth::isAdmin() anyway');
+    }
+
+    public function isDoctor()
+    {
+        if ($this->check()) {
+            if(isset($_SESSION['isdoctor']))
+                return $_SESSION['isdoctor'] === 'yes';
+        } 
+        
+        return false;
+
+        //throw new Exception('Not logged in but called Auth::isDoctor() anyway');
     }
 
     public function logout()
     {
         if(!$this->guest()) {
             session_destroy();
+            unset($_SESSION['CSRF_token']);
         }
     }
-
 }

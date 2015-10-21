@@ -22,10 +22,19 @@
         <div id="container">
             <div id="navbar">
                 {% if isLoggedIn %}
-                    Logged in as {{ loggedInUsername }}.<br>
+                    Logged in as {{ loggedInUsername|escape }}.<br>
+                    {% if balance is defined %}
+                    {% if user.isDoctor %}
+                    Current income balance is: ${{ balance }}<br>
+                    {% else %}
+                    Amount spent on doctor questions: ${{ balance }}<br>
+                    {% endif %}
+                    {% endif %}
                     <a href ="{{ urlFor('showposts') }}"> Show posts</a> <br>
                     <a href="{{ urlFor('editprofile') }}">Edit profile</a> <br>
+                    {% if not user.isDoctor %}
                     <a href="{{ urlFor('createpost') }}"> Create new post</a><br>
+                    {% endif %}
                     <a href="{{ urlFor('logout') }}">Log out</a> <br>
                 {% else %}
                     <a href="{{ urlFor('newuser') }}">Create user</a> <br />
@@ -39,11 +48,10 @@
 
                 <br>
 
-                <a href="/users">All users (DEBUG FEATURE) </a> <br>
             </div>
 
             <div id="content">
-                <div id="flashinfo">{{ flash.info|raw }}</div>
+                <div id="flashinfo">{{ flash.info|escape }}</div>
                 {% block content %}{% endblock %}
             </div>
         </div>

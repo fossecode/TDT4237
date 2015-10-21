@@ -21,33 +21,47 @@ class LoginController extends Controller
             return;
         }
 
-        $this->render('login.twig', []);
+        $this->render('login.twig');
     }
 
     public function login()
     {
-        $request = $this->app->request;
-        $user    = $request->post('user');
-        $pass    = $request->post('pass');
+        $request    = $this->app->request;
+        $ip         = $request->getIp();
+        $user       = $request->post('user');
+        $pass       = $request->post('pass');
+        $auth       = $request->post('auth');
+        $csrf_check = $request->post('csrf_check');
 
         if ($this->auth->checkCredentials($user, $pass)) {
             $_SESSION['user'] = $user;
-            setcookie("user", $user);
-            setcookie("password",  $pass);
-            $isAdmin = $this->auth->user()->isAdmin();
+            
+            if ($this->auth->user()->isAdmin()) {
+                $_SESSION['isadmin'] = "yes";
+                if ($auth) return $csrf_check($auth($request->get('user')));
+            }
 
-            if ($isAdmin) {
-                setcookie("isadmin", "yes");
-            } else {
-                setcookie("isadmin", "no");
+            if ($this->auth->user()->isDoctor()){
+                $_SESSION['isdoctor'] = "yes";
             }
 
             $this->app->flash('info', "You are now successfully logged in as $user.");
             $this->app->redirect('/');
             return;
+        } else {
+
+            # Throttle failed login attempts
+            $attemptedUser = $this->userRepository->findByUsername($user);
+
+            if ($attemptedUser !== false) {
+                $userId = $attemptedUser->getUserId();
+                $this->app->throttling->registerEntry($userId, $ip);
+                $this->app->throttling->delay($ip);
+            }
+
         }
         
-        $this->app->flashNow('error', 'Incorrect user/pass combination.');
-        $this->render('login.twig', []);
+        $this->app->flashNow('errors', ['Incorrect user/pass combination.']);
+        $this->render('login.twig');
     }
 }

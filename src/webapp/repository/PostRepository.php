@@ -8,96 +8,114 @@ use tdt4237\webapp\models\PostCollection;
 
 class PostRepository
 {
+    const SELECT_POST   = "SELECT p.postId, content, title, userId, paidQuestion, timestamp, doctorId FROM posts as p NATURAL JOIN users LEFT JOIN payments ON p.postId = payments.postId WHERE p.postId = ?;";
+    const ALL_POSTS     = "SELECT p.postId, content, title, userId, paidQuestion, timestamp, doctorId FROM posts as p NATURAL JOIN users LEFT JOIN payments ON p.postId = payments.postId;";
+    const DELETE_POST   = "DELETE FROM posts WHERE postId = ?;";
+    const INSERT_POST   = "INSERT INTO posts (title, userId, content, paidQuestion, timestamp) VALUES (?,?,?,?,?)";
 
     /**
      * @var PDO
      */
-    private $db;
+    private $pdo;
+    private $userRepository;
 
-    public function __construct(PDO $db)
+    public function __construct(PDO $pdo, UserRepository $userRepository)
     {
-        $this->db = $db;
+        $this->pdo = $pdo;
+        $this->userRepository = $userRepository;
     }
     
-    public static function create($id, $author, $title, $content, $date)
+    public static function create($id, $title, $content, $date, $user, $answeredByDoc, $paidQuestion)
     {
         $post = new Post;
         
         return $post
             ->setPostId($id)
-            ->setAuthor($author)
+            ->setUser($user)
             ->setTitle($title)
             ->setContent($content)
-            ->setDate($date);
+            ->setDate($date)
+            ->setAnsweredByDoc($answeredByDoc)
+            ->setPaidQuestion($paidQuestion);
     }
 
     public function find($postId)
     {
-        $sql  = "SELECT * FROM posts WHERE postId = $postId";
-        $result = $this->db->query($sql);
-        $row = $result->fetch();
+        $stmt = $this->pdo->prepare(self::SELECT_POST);
+        $stmt->execute(array($postId));
+        $rows = $stmt->fetch();
 
-        if($row === false) {
+        if($rows === false) {
             return false;
         }
+        return $this->makeFromRow($rows);
+    }
 
-
-        return $this->makeFromRow($row);
+    public function isPost($postId){
+        if (! $this->find($postId))
+            return false;
+        return true;
     }
 
     public function all()
     {
-        $sql   = "SELECT * FROM posts";
-        $results = $this->db->query($sql);
+        $stmt = $this->pdo->prepare(self::ALL_POSTS);
+        $stmt->execute(array());
+        $rows = $stmt->fetchAll();
 
-        if($results === false) {
+        if($rows === false) {
             return [];
             throw new \Exception('PDO error in posts all()');
         }
 
-        $fetch = $results->fetchAll();
-        if(count($fetch) == 0) {
+        if(count($rows) == 0) {
             return false;
         }
 
         return new PostCollection(
-            array_map([$this, 'makeFromRow'], $fetch)
+            array_map([$this, 'makeFromRow'], $rows)
         );
     }
 
     public function makeFromRow($row)
     {
+        isset($row['doctorId']) ? $answeredByDoc = true : $answeredByDoc = false;
+        $paidQuestion = ($row['paidQuestion'] == 1)? true : false;
         return static::create(
             $row['postId'],
-            $row['author'],
             $row['title'],
             $row['content'],
-            $row['date']
+            $row['timestamp'],
+            $this->userRepository->findByUserId($row['userId']),
+            $answeredByDoc,
+            $paidQuestion
+            
         );
-
-       //  $this->db = $db;
     }
 
     public function deleteByPostid($postId)
     {
-        return $this->db->exec(
-            sprintf("DELETE FROM posts WHERE postid='%s';", $postId));
+        $stmt = $this->pdo->prepare(self::DELETE_POST);
+        return $stmt->execute(array($postId));
     }
 
 
     public function save(Post $post)
     {
         $title   = $post->getTitle();
-        $author = $post->getAuthor();
+        $userId = $post->getUserId();
         $content = $post->getContent();
         $date    = $post->getDate();
-
-        if ($post->getPostId() === null) {
-            $query = "INSERT INTO posts (title, author, content, date) "
-                . "VALUES ('$title', '$author', '$content', '$date')";
+        if ($post->isPaidQuestion()){
+            $paidQuestion = 1;
+        } else {
+            $paidQuestion = 0;
         }
 
-        $this->db->exec($query);
-        return $this->db->lastInsertId();
+        if ($post->getPostId() === null) {
+            $stmt = $this->pdo->prepare(self::INSERT_POST);
+            $stmt->execute(array($title, $userId, $content, $paidQuestion, $date));
+        }
+        return $this->pdo->lastInsertId();
     }
 }

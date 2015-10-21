@@ -13,9 +13,10 @@ class User
     protected $hash;
     protected $email   = null;
     protected $bio     = 'Bio is empty.';
-    protected $age;
-    protected $bankcard;
+    protected $age = null;
     protected $isAdmin = 0;
+    protected $isDoctor = 0;
+    protected $accountNumber = null;
 
     function __construct($username, $hash, $fullname, $address, $postcode)
     {
@@ -68,6 +69,10 @@ class User
         return $this->address;
     }
 
+    public function getAccountNumber(){
+        return $this->accountNumber;
+    }
+
     public function setAddress($address) {
         $this->address = $address;
     }
@@ -75,6 +80,10 @@ class User
     public function getPostcode() {
         return $this->postcode;
 
+    }
+
+    public function isDoctor() {
+        return $this->isDoctor === '1';
     }
 
     public function setPostcode($postcode) {
@@ -123,10 +132,26 @@ class User
         return $this;
     }
 
+    public function setAccountNumber($accountNumber)
+    {
+        $this->accountNumber = $accountNumber;
+    }
+
     public function setIsAdmin($isAdmin)
     {
         $this->isAdmin = $isAdmin;
         return $this;
+    }
+
+    public function setIsDoctor($isDoctor){
+        $this->isDoctor = $isDoctor;
+        return $this;
+    }
+
+    public function hasAccountNumber(){
+        if ($this->getAccountNumber() == null || $this->getAccountNumber() == "")
+            return false;
+        return true;
     }
 
 }

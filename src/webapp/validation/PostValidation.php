@@ -4,27 +4,19 @@ namespace tdt4237\webapp\validation;
 
 use tdt4237\webapp\models\Post;
 
-class PostValidation {
+class PostValidation extends Validation
+{
+    protected $app;
+    protected $userRepository;
 
-    private $validationErrors = [];
-
-    public function __construct($author, $title, $content) {
-        return $this->validate($author, $title, $content);
+    public function __construct($title, $user, $content, $csrfToken, $doctorQuestion) {
+        parent::__construct($csrfToken);
+        return $this->validate($user, $title, $content, $doctorQuestion);
     }
 
-    public function isGoodToGo()
-    {
-        return \count($this->validationErrors) ===0;
-    }
-
-    public function getValidationErrors()
-    {
-    return $this->validationErrors;
-    }
-
-    public function validate($author, $title, $content)
-    {
-        if ($author == null) {
+    public function validate($user, $title, $content, $doctorQuestion)
+    {   
+        if ($user->getUsername() == null) {
             $this->validationErrors[] = "Author needed";
 
         }
@@ -35,9 +27,11 @@ class PostValidation {
         if ($content == null) {
             $this->validationErrors[] = "Text needed";
         }
+        if ($doctorQuestion == 'true' && $user->hasAccountNumber() == false){
+            $this->validationErrors[] = "User account number needed";
+        }
+
 
         return $this->validationErrors;
     }
-
-
 }

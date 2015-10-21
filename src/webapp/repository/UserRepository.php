@@ -10,12 +10,14 @@ use tdt4237\webapp\models\User;
 
 class UserRepository
 {
-    const INSERT_QUERY   = "INSERT INTO users(user, pass, email, age, bio, isadmin, fullname, address, postcode) VALUES('%s', '%s', '%s' , '%s' , '%s', '%s', '%s', '%s', '%s')";
-    const UPDATE_QUERY   = "UPDATE users SET email='%s', age='%s', bio='%s', isadmin='%s', fullname ='%s', address = '%s', postcode = '%s' WHERE id='%s'";
-    const FIND_BY_NAME   = "SELECT * FROM users WHERE user='%s'";
-    const DELETE_BY_NAME = "DELETE FROM users WHERE user='%s'";
-    const SELECT_ALL     = "SELECT * FROM users";
-    const FIND_FULL_NAME = "SELECT * FROM users WHERE user='%s'";
+    const INSERT_QUERY      = "INSERT INTO users(username, password, email, age, bio, isadmin, fullname, address, postcode) VALUES(?,?,?,?,?,?,?,?,?)";
+    const UPDATE_QUERY      = "UPDATE users SET email=?, age=?, bio=?, isadmin=?, fullname =?, address = ?, postcode = ?, accountNumber = ? WHERE userId=?";
+    const FIND_BY_ID        = "SELECT * FROM users WHERE userId=?";
+    const FIND_BY_USERNAME  = "SELECT * FROM users WHERE username=?";
+    const DELETE_BY_ID      = "DELETE FROM users WHERE userId=?";
+    const SELECT_ALL        = "SELECT * FROM users";
+    const FIND_FULL_NAME    = "SELECT * FROM users WHERE userId=?";
+    const SET_DOCTOR       = "UPDATE users SET isdoctor =? WHERE userId =?";
 
     /**
      * @var PDO
@@ -29,13 +31,17 @@ class UserRepository
 
     public function makeUserFromRow(array $row)
     {
-        $user = new User($row['user'], $row['pass'], $row['fullname'], $row['address'], $row['postcode']);
-        $user->setUserId($row['id']);
+        $user = new User($row['username'], $row['password'], $row['fullname'], $row['address'], $row['postcode']);
+        $user->setUserId($row['userId']);
         $user->setFullname($row['fullname']);
         $user->setAddress(($row['address']));
         $user->setPostcode((($row['postcode'])));
         $user->setBio($row['bio']);
         $user->setIsAdmin($row['isadmin']);
+        $user->setIsDoctor($row['isdoctor']);
+        $decryptedAccountNumber = self::decrypt("brannmann2",$row['accountNumber']); 
+        $user->setAccountNumber($decryptedAccountNumber);
+
 
         if (!empty($row['email'])) {
             $user->setEmail(new Email($row['email']));
@@ -48,49 +54,67 @@ class UserRepository
         return $user;
     }
 
-    public function getNameByUsername($username)
+    public function getNameByUserId($userId)
     {
-        $query = sprintf(self::FIND_FULL_NAME, $username);
-
-        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
-        $row = $result->fetch();
+        $stmt = $this->pdo->prepare(self::FIND_FULL_NAME);
+        $stmt->execute(array($userId));
+        $row = $stmt->fetch();
         return $row['fullname'];
-
     }
 
-    public function findByUser($username)
+    public function findByUserId($userId)
     {
-        $query  = sprintf(self::FIND_BY_NAME, $username);
-        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
-        $row = $result->fetch();
+        try{
+            $userId = (int) $userId;
+        }
+        catch(Exception $e) {
+            return false;
+        }
+
+        $stmt = $this->pdo->prepare(self::FIND_BY_ID);
+        $stmt->execute(array($userId));
+        $row = $stmt->fetch();
         
         if ($row === false) {
             return false;
         }
 
+        return $this->makeUserFromRow($row);
+    }
+
+    public function findByUsername($username)
+    {
+        $stmt = $this->pdo->prepare(self::FIND_BY_USERNAME);
+        $stmt->execute(array($username));
+        $row = $stmt->fetch();
+        
+        if ($row === false) {
+            return false;
+        }
 
         return $this->makeUserFromRow($row);
     }
 
-    public function deleteByUsername($username)
+    public function deleteByUserId($userId)
     {
-        return $this->pdo->exec(
-            sprintf(self::DELETE_BY_NAME, $username)
-        );
+        $stmt = $this->pdo->prepare(self::DELETE_BY_ID);
+        return $stmt->execute(array($userId));
     }
 
 
 
     public function all()
     {
-        $rows = $this->pdo->query(self::SELECT_ALL);
+        $stmt = $this->pdo->prepare(self::SELECT_ALL);
+        $stmt->execute();
+        $rows = $stmt->fetchAll();
         
-        if ($rows === false) {
+        if ($rows === null) {
             return [];
-            throw new \Exception('PDO error in all()');
+            throw new \Exception('PDO error in all()'); //never called?
         }
 
-        return array_map([$this, 'makeUserFromRow'], $rows->fetchAll());
+        return array_map([$this, 'makeUserFromRow'], $rows);
     }
 
     public function save(User $user)
@@ -104,20 +128,42 @@ class UserRepository
 
     public function saveNewUser(User $user)
     {
-        $query = sprintf(
-            self::INSERT_QUERY, $user->getUsername(), $user->getHash(), $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode()
-        );
-
-        return $this->pdo->exec($query);
+        $stmt = $this->pdo->prepare(self::INSERT_QUERY);
+        return $stmt->execute(array($user->getUsername(), $user->getHash(), $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode()));
     }
 
     public function saveExistingUser(User $user)
     {
-        $query = sprintf(
-            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getUserId()
-        );
+        $stmt = $this->pdo->prepare(self::UPDATE_QUERY);
+        $encryptedAccountNumber = self::encrypt("brannmann2",$user->getAccountNumber());
+        return $stmt->execute(array($user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $encryptedAccountNumber, $user->getUserId()));
+    }
 
-        return $this->pdo->exec($query);
+
+    public function makeDoctor($userId)
+    {
+        $stmt = $this->pdo->prepare(self::SET_DOCTOR);
+        return $stmt->execute(array(1,$userId));
+    }
+
+    public function removeDoctor($userId)
+    {
+        $stmt = $this->pdo->prepare(self::SET_DOCTOR);
+        return $stmt->execute(array(0,$userId));
+    }
+
+    public static function encrypt($key, $decrypted){
+
+        return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $decrypted, MCRYPT_MODE_CBC, md5(md5($key))));   
+    
+    }
+
+    public static function decrypt($key, $encrypted){
+
+        if($encrypted)
+            return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($encrypted), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
+        else 
+            return "";
     }
 
 }

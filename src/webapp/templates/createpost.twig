@@ -5,16 +5,21 @@
     <h2>Create post</h2>
 
     <form action="" method="POST">
-        <div id="flasherror">{{ flash.error }}</div>
+        {% if flash.errors %}
+        <ul>
+            {% for error in flash.errors %}
+                <li> {{ error|escape }} </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
         <label>Title:</label>
         <input type = "text" name="title"> <br />
 
         <label>Text:</label>
         <textarea cols="40" rows="10" name="content"> </textarea><br />
-
-        <label>Author:</label>
-        <input type="text" name="author" readOnly="true" value="{{username}}"> <br />
+        <label>Do you want a doctor to answer? ($10)</label><input type="checkbox" name="doctor" value="true"><br>
         <input type="submit" name="submit" value="Create post">
+        <input type="text" name="csrf" hidden value="{{ csrf }}">
     </form>
 {% endblock %}

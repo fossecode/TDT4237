@@ -12,9 +12,14 @@
     </tr>
     {% for user in users %}
         <tr>
-            <td>{{ user.userid|raw }}</td>
-            <td><a href="/user/{{ user.username|raw }}">{{ user.username|raw }}</a></td>
-            <td><a href="/admin/delete/{{ user.username|raw }}">Delete this user</a></td>
+            <td>{{ user.userid|escape }}</td>
+            <td><a href="/user/{{ user.userid|escape }}">{{ user.username|escape }}</a></td>
+            {% if not user.isDoctor %}
+            <td><a href="/admin/makeDoctor/{{ user.userid|escape }}?token={{ csrf }}">Make doctor</a></td>
+            {% else %}
+            <td><a href="/admin/removeDoctor/{{ user.userid|escape }}?token={{ csrf }}">Remove doctor status</a></td>
+            {% endif %}
+            <td><a href="/admin/delete/{{ user.userid|escape }}?token={{ csrf }}">Delete this user</a></td>
         </tr>
     {% endfor %}
     </table>
@@ -25,13 +30,15 @@
 {% if posts %}
     <table>
         <tr>
-            <th> Id</th>
+            <th> ID</th>
             <th> Title</th>
+            <th></th>
         </tr>
         {% for post in posts %}
         <tr>
-            <td><a href="/posts/{{ post.postid|raw }}">{{ post.title }}</a></td>
-            <td><a href="/admin/delete/post/{{ post.postid|raw }}">Delete this post</a></td>
+            <td>{{ post.postId|escape }}</td>
+            <td><a href="/posts/{{ post.postId|escape }}">{{ post.title|escape }}</a></td>
+            <td><a href="/admin/delete/post/{{ post.postid|escape }}?token={{ csrf }}">Delete this post</a></td>
         </tr>
         {% endfor %}
     </table>

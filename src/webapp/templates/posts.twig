@@ -3,13 +3,40 @@
 {% block content %}
 
     <h2>Posts</h2>
+    {% if user.isDoctor %}
+    	{% for post in posts %}
 
-    {% for post in posts %}
-        <div class="post">
-            <a href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}
-        </div>
+    		{% if post.isPaidQuestion %}
+	    
+	        <div class="post">
+	            <a href="/posts/{{ post.postId|escape }}">{{ post.title|escape}}</a> by  <a href="/user/{{ post.user.userid|escape }}"> {{ post.user.username|escape }}</a>. Posted on {{ post.date|escape }}
+	            {% if post.isAnsweredByDoc %}
+	            <b>Answered by doctor.</b>
+    			{% endif %}
+	        </div>
+        
+        	{% endif %}
+    	
+    	{% endfor %}    
+    
     {% else %}
-        There are no posts as of yet
-    {% endfor %}
+	    {% for post in posts %}
+	    	
+	        <div class="post">
+	            <a href="/posts/{{ post.postId|escape }}">{{ post.title|escape}}</a> by  <a href="/user/{{ post.user.userid|escape }}"> {{ post.user.username|escape }}</a>. Posted on {{ post.date|escape }}
+	            {% if post.isAnsweredByDoc %}
+	            <b>Answered by doctor.</b>
+	            {% elseif post.paidQuestion %}
+	            <b>Paid question, awaiting doctor answer.</b>
+    			{% endif %}
+	        </div>
+	        
+		{% else %}
+
+	        There are no posts as of yet
+	    
+	    {% endfor %}
+
+	{% endif %}
 
 {% endblock %}

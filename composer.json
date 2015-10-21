@@ -12,6 +12,7 @@
         "slim/slim": "2.*",
         "slim/views": "0.1.*",
         "twig/twig": "1.16.*"
+
     },
     "autoload": {
         "psr-4": {
@@ -22,11 +23,12 @@
         "start": "php -S 0.0.0.0:8080 -t web web/index.php",
         "test": "phpunit --colors --bootstrap vendor/autoload.php test/",
         "down": "tdt4237\\webapp\\Sql::down",
-        "up": "tdt4237\\webapp\\Sql::up"
+        "up": "tdt4237\\webapp\\Sql::up",
+        "log": "chmod -R 777 log/"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "~2.3",
-        "phpmd/phpmd": "~2.2",
-        "phpunit/phpunit": "~4.6"
+        "phpunit/phpunit": "~4.6",
+        "rmccue/requests": ">=1.0"
+
     }
 }
