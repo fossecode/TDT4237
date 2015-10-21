@@ -88,7 +88,6 @@ class Sql
 
 try {
     $log_dir = realpath(dirname(dirname(dirname(__FILE__)))).'/log';
-    print $log_dir;
     chmod($log_dir, 0777);
 } catch (\Exception $e) {
 
