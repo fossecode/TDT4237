@@ -129,15 +129,17 @@ class UserController extends Controller
         $accountNumber = str_replace(".", "", $request->post('accountNumber'));
 
         $updateAccountNumber = (substr($accountNumber,0,6) != "******") && (! empty($accountNumber));
-
         $updatePassword = !empty($newPassword);
 
-        if ($updatePassword && $this->auth->checkCredentials($user->getUsername(), $oldPassword)) {
-            // new pass er valid
-            $user->setHash($this->hash->make($newPassword));
-        }
-
         $validation = new EditUserFormValidation($email, $bio, $age, $fullname, $address, $postcode, $csrfToken, $accountNumber, $updateAccountNumber);
+
+        if ($updatePassword && $this->auth->checkCredentials($user->getUsername(), $oldPassword)) {
+            if (strlen($newPassword) < 8 || strlen($newPassword) >= 50) {
+                $this->validationErrors[] = 'Password must be between 8 and 50 characters long.';
+            } else {
+                $user->setHash($this->hash->make($newPassword));
+            }
+        }
 
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));
