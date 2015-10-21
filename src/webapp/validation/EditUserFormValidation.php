@@ -5,9 +5,10 @@ namespace tdt4237\webapp\validation;
 class EditUserFormValidation extends Validation
 {
     
-    public function __construct($email, $bio, $age, $fullname, $address, $postcode, $csrfToken, $accountNumber)
+    public function __construct($email, $bio, $age, $fullname, $address, $postcode, $csrfToken, $accountNumber, $updateAccountNumber)
     {
         parent::__construct($csrfToken);
+        $this->updateAccountNumber = $updateAccountNumber;
         $this->validate($email, $bio, $age, $fullname, $address, $postcode, $accountNumber);
     }
 
@@ -19,7 +20,8 @@ class EditUserFormValidation extends Validation
         $this->validateFullname($fullname);
         $this->validateAddress($address);
         $this->validatePostcode($postcode);
-        $this->validateAccountNumber($accountNumber);
+        if ($this->updateAccountNumber)
+            $this->validateAccountNumber($accountNumber);
     }
     
     private function validateEmail($email)

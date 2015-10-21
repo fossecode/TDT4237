@@ -125,7 +125,9 @@ class UserController extends Controller
         $csrfToken = $request->post('csrf');
         $accountNumber = str_replace(".", "", $request->post('accountNumber'));
 
-        $validation = new EditUserFormValidation($email, $bio, $age, $fullname, $address, $postcode, $csrfToken, $accountNumber);
+        $updateAccountNumber = (substr($accountNumber,0,6) != "******") && (! empty($accountNumber));
+
+        $validation = new EditUserFormValidation($email, $bio, $age, $fullname, $address, $postcode, $csrfToken, $accountNumber, $updateAccountNumber);
 
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));
@@ -134,9 +136,12 @@ class UserController extends Controller
             $user->setFullname($fullname);
             $user->setAddress($address);
             $user->setPostcode($postcode);
-            $user->setAccountNumber($accountNumber);
+            print_r($updateAccountNumber);
+            if($updateAccountNumber){
+                $user->setAccountNumber($accountNumber);
+                print_r("UPDAtING ACOC NOPERS");}
             $this->userRepository->save($user);
-
+            $this->auth->user = $user;
             $this->app->flashNow('info', 'Your profile was successfully saved.');
             return $this->render('edituser.twig',  [
                 'user' => $user
@@ -156,4 +161,5 @@ class UserController extends Controller
             $this->app->redirect('/login');
         }
     }
+
 }

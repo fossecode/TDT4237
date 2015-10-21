@@ -17,7 +17,7 @@ class Sql
      */
     static function up()
     {
-        $q1 = "CREATE TABLE users(userId INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50) UNIQUE, password VARCHAR(255), email varchar(50) default null, fullname varchar(50), address varchar(50), postcode INTEGER (4), age INTEGER, bio varchar(150), isadmin INTEGER DEFAULT 0, isdoctor INTEGER DEFAULT 0, accountNumber INTEGER DEFAULT NULL);";
+        $q1 = "CREATE TABLE users(userId INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50) UNIQUE, password VARCHAR(255), email varchar(50) default null, fullname varchar(50), address varchar(50), postcode INTEGER (4), age INTEGER, bio varchar(150), isadmin INTEGER DEFAULT 0, isdoctor INTEGER DEFAULT 0, accountNumber VARCHAR(255) DEFAULT NULL);";
         $q6 = "CREATE TABLE posts(postId INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER NOT NULL, title TEXT NOT NULL, content TEXT NOT NULL, paidQuestion INTEGER DEFAULT 0, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(userId) REFERENCES users(userId));";
         $q7 = "CREATE TABLE comments(commentId INTEGER PRIMARY KEY AUTOINCREMENT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, userId INTEGER NOT NULL, text INTEGER NOT NULL, postId INTEGER NOT NULL, FOREIGN KEY(postId) REFERENCES posts(postId), FOREIGN KEY(userId) REFERENCES users(userId));";
         $q8 = "CREATE TABLE throttling(userId INTEGER NOT NULL, ip VARCHAR(255), timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(userId) REFERENCES users(userId));";
@@ -42,16 +42,19 @@ class Sql
         $hash2 = Hash::make('bobdylan');
         $hash3 = Hash::make('liverpool');
         $hash4 = Hash::make('doctor');
+        $hash5 = Hash::make('Testuser123');
 
         $q1 = "INSERT INTO users(username, password, isadmin, fullname, address, postcode) VALUES ('admin', '$hash1', 1, 'admin', 'homebase', '9090')";
         $q2 = "INSERT INTO users(username, password, isadmin, fullname, address, postcode) VALUES ('bob', '$hash2', 0, 'Robert Green', 'Greenland Grove 9', '2010')";
         $q3 = "INSERT INTO users(username, password, isadmin, fullname, address, postcode) VALUES ('bjarni', '$hash3', 0, 'Bjarni Torgmund', 'Hummerdale 12', '4120')";
         $q4 = "INSERT INTO users(username, password, isadmin, fullname, address, postcode, isdoctor) VALUES ('doctor', '$hash4', 0, 'Doc Torgmund', 'Hummerdale 12', '4120', 1)";
+        $q5 = "INSERT INTO users(username, password, isadmin, fullname, address, postcode) VALUES ('testuser', '$hash5', 1, 'Testuser', 'Test Street 1337', '1337')";
 
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);
         self::$pdo->exec($q3);
         self::$pdo->exec($q4);
+        self::$pdo->exec($q5);
 
 
         print "[tdt4237] Done inserting dummy users.".PHP_EOL;
