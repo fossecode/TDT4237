@@ -135,7 +135,7 @@ class UserController extends Controller
 
         if ($updatePassword && $this->auth->checkCredentials($user->getUsername(), $oldPassword)) {
             if (strlen($newPassword) < 8 || strlen($newPassword) >= 50) {
-                $this->validationErrors[] = 'Password must be between 8 and 50 characters long.';
+                $validation->validationErrors[] = 'Password must be between 8 and 50 characters long.';
             } else {
                 $user->setHash($this->hash->make($newPassword));
             }
