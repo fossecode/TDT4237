@@ -110,12 +110,15 @@ class UserController extends Controller
         ]);
     }
 
+
     public function receiveUserEditForm()
     {
         $this->makeSureUserIsAuthenticated();
         $user = $this->auth->user();
 
         $request = $this->app->request;
+        $oldPassword = $request->post('old_password');
+        $newPassword = $request->post('new_password');
         $email   = $request->post('email');
         $bio     = $request->post('bio');
         $age     = $request->post('age');
@@ -127,6 +130,13 @@ class UserController extends Controller
 
         $updateAccountNumber = (substr($accountNumber,0,6) != "******") && (! empty($accountNumber));
 
+        $updatePassword = !empty($newPassword);
+
+        if ($updatePassword && $this->auth->checkCredentials($user->getUsername(), $oldPassword)) {
+            // new pass er valid
+            $user->setHash($this->hash->make($newPassword));
+        }
+
         $validation = new EditUserFormValidation($email, $bio, $age, $fullname, $address, $postcode, $csrfToken, $accountNumber, $updateAccountNumber);
 
         if ($validation->isGoodToGo()) {
@@ -136,10 +146,10 @@ class UserController extends Controller
             $user->setFullname($fullname);
             $user->setAddress($address);
             $user->setPostcode($postcode);
-            print_r($updateAccountNumber);
-            if($updateAccountNumber){
+
+            if ($updateAccountNumber)
                 $user->setAccountNumber($accountNumber);
-                print_r("UPDAtING ACOC NOPERS");}
+
             $this->userRepository->save($user);
             $this->auth->user = $user;
             $this->app->flashNow('info', 'Your profile was successfully saved.');
