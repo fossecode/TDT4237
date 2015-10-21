@@ -4,47 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1b0341e0fa3ed345f165e93836472945",
-    "content-hash": "83474095f4f1840df1cf37b42e6f119f",
+    "hash": "95518efdf27c7bbc65c7433efa276532",
+    "content-hash": "7d7d3b49369726c131f47582df3cccbe",
     "packages": [
-        {
-            "name": "slim/logger",
-            "version": "0.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/codeguy/Slim-Logger.git",
-                "reference": "ad3a2e62236f5d37056de9a4586659edc8164937"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/codeguy/Slim-Logger/zipball/ad3a2e62236f5d37056de9a4586659edc8164937",
-                "reference": "ad3a2e62236f5d37056de9a4586659edc8164937",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0",
-                "slim/slim": ">=2.4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Slim\\Logger\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Josh Lockhart",
-                    "email": "info@joshlockhart.com",
-                    "homepage": "http://www.joshlockhart.com/"
-                }
-            ],
-            "description": "Slim Framework logger",
-            "time": "2014-07-16 20:11:26"
-        },
         {
             "name": "slim/slim",
             "version": "2.6.2",
