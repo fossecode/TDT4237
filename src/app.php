@@ -119,4 +119,8 @@ $app->hook('slim.after.router', function () use ($app) {
     }
 });
 
+// Remove headers that reveal webserver and CGI version 
+header_remove("X-Powered-By");
+header_remove("Server");
+
 return $app;
