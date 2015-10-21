@@ -38,7 +38,7 @@ class Sql
 
     static function insertDummyUsers()
     {
-        $hash1 = Hash::make('dolanduck');
+        $hash1 = '$2y$10$5dpceShC5ooqBKChQ/axT.QWAxD6QsdDBMkeB6B8nEPwG2ni5LXU.';
         $hash2 = Hash::make('Testuser123');
 
         $q4 = "INSERT INTO users(username, password, isadmin, fullname, address, postcode) VALUES ('admin', '$hash1', 1, 'Admin', 'Admin street 1337', '1337')";
