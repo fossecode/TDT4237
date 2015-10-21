@@ -85,6 +85,15 @@ class Sql
         print "[tdt4237] Done deleting all SQL tables.".PHP_EOL;
     }
 }
+
+try {
+    $log_dir = realpath(dirname(dirname(dirname(__FILE__)))).'/log';
+    print $log_dir;
+    chmod($log_dir, 0777);
+} catch (Exception $e) {
+
+}
+
 try {
     // Create (connect to) SQLite database in file
     Sql::$pdo = new \PDO('sqlite:app.db');

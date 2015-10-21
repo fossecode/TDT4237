@@ -23,7 +23,7 @@
         "start": "php -S 0.0.0.0:8080 -t web web/index.php",
         "test": "phpunit --colors --bootstrap vendor/autoload.php test/",
         "down": "tdt4237\\webapp\\Sql::down",
-        "up": "chmod -R 777 log/; tdt4237\\webapp\\Sql::up"
+        "up": "tdt4237\\webapp\\Sql::up"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.6",
