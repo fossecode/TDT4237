@@ -17,7 +17,7 @@ class Sql
      */
     static function up()
     {
-        $q1 = "CREATE TABLE users(userId INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50) UNIQUE, password VARCHAR(255), email varchar(50) default null, fullname varchar(50), address varchar(50), postcode INTEGER (4), age INTEGER, bio varchar(150), isadmin INTEGER DEFAULT 0, isdoctor INTEGER DEFAULT 0, accountNumber INTEGER DEFAULT NULL);";
+        $q1 = "CREATE TABLE users(userId INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(50) UNIQUE, password VARCHAR(255), email varchar(50) default null, fullname varchar(50), address varchar(50), postcode INTEGER (4), age INTEGER, bio varchar(150), isadmin INTEGER DEFAULT 0, isdoctor INTEGER DEFAULT 0, accountNumber VARCHAR(255) DEFAULT NULL);";
         $q6 = "CREATE TABLE posts(postId INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER NOT NULL, title TEXT NOT NULL, content TEXT NOT NULL, paidQuestion INTEGER DEFAULT 0, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(userId) REFERENCES users(userId));";
         $q7 = "CREATE TABLE comments(commentId INTEGER PRIMARY KEY AUTOINCREMENT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, userId INTEGER NOT NULL, text INTEGER NOT NULL, postId INTEGER NOT NULL, FOREIGN KEY(postId) REFERENCES posts(postId), FOREIGN KEY(userId) REFERENCES users(userId));";
         $q8 = "CREATE TABLE throttling(userId INTEGER NOT NULL, ip VARCHAR(255), timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(userId) REFERENCES users(userId));";

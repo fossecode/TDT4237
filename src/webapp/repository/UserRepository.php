@@ -39,7 +39,8 @@ class UserRepository
         $user->setBio($row['bio']);
         $user->setIsAdmin($row['isadmin']);
         $user->setIsDoctor($row['isdoctor']);
-        $user->setAccountNumber($row['accountNumber']);
+        $decryptedAccountNumber = self::decrypt("brannmann2",$row['accountNumber']); 
+        $user->setAccountNumber($decryptedAccountNumber);
 
         if (!empty($row['email'])) {
             $user->setEmail(new Email($row['email']));
@@ -133,7 +134,8 @@ class UserRepository
     public function saveExistingUser(User $user)
     {
         $stmt = $this->pdo->prepare(self::UPDATE_QUERY);
-        return $stmt->execute(array($user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getAccountNumber(), $user->getUserId()));
+        $encryptedAccountNumber = self::encrypt("brannmann2",$user->getAccountNumber());
+        return $stmt->execute(array($user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $encryptedAccountNumber, $user->getUserId()));
     }
 
 
@@ -149,4 +151,15 @@ class UserRepository
         return $stmt->execute(array(0,$userId));
     }
 
+    public static function encrypt($key, $decrypted){
+
+        return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $string, MCRYPT_MODE_CBC, md5(md5($key))));   
+        
+    }
+
+    public static function decrypt($key, $encrypted){
+
+        return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($encrypted), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
+
+    }
 }
