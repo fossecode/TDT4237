@@ -11,7 +11,7 @@ use tdt4237\webapp\models\User;
 class UserRepository
 {
     const INSERT_QUERY      = "INSERT INTO users(username, password, email, age, bio, isadmin, fullname, address, postcode) VALUES(?,?,?,?,?,?,?,?,?)";
-    const UPDATE_QUERY      = "UPDATE users SET email=?, age=?, bio=?, isadmin=?, fullname =?, address = ?, postcode = ?, accountNumber = ? WHERE userId=?";
+    const UPDATE_QUERY      = "UPDATE users SET email=?, age=?, bio=?, isadmin=?, fullname =?, address = ?, postcode = ?, accountNumber = ?, password = ? WHERE userId=?";
     const FIND_BY_ID        = "SELECT * FROM users WHERE userId=?";
     const FIND_BY_USERNAME  = "SELECT * FROM users WHERE username=?";
     const DELETE_BY_ID      = "DELETE FROM users WHERE userId=?";
@@ -136,7 +136,7 @@ class UserRepository
     {
         $stmt = $this->pdo->prepare(self::UPDATE_QUERY);
         $encryptedAccountNumber = self::encrypt("brannmann2",$user->getAccountNumber());
-        return $stmt->execute(array($user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $encryptedAccountNumber, $user->getUserId()));
+        return $stmt->execute(array($user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $encryptedAccountNumber, $user->getHash(), $user->getUserId()));
     }
 
 

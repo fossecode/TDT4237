@@ -110,12 +110,15 @@ class UserController extends Controller
         ]);
     }
 
+
     public function receiveUserEditForm()
     {
         $this->makeSureUserIsAuthenticated();
         $user = $this->auth->user();
 
         $request = $this->app->request;
+        $oldPassword = $request->post('old_password');
+        $newPassword = $request->post('new_password');
         $email   = $request->post('email');
         $bio     = $request->post('bio');
         $age     = $request->post('age');
@@ -126,8 +129,17 @@ class UserController extends Controller
         $accountNumber = str_replace(".", "", $request->post('accountNumber'));
 
         $updateAccountNumber = (substr($accountNumber,0,6) != "******") && (! empty($accountNumber));
+        $updatePassword = !empty($newPassword);
 
         $validation = new EditUserFormValidation($email, $bio, $age, $fullname, $address, $postcode, $csrfToken, $accountNumber, $updateAccountNumber);
+
+        if ($updatePassword && $this->auth->checkCredentials($user->getUsername(), $oldPassword)) {
+            if (strlen($newPassword) < 8 || strlen($newPassword) >= 50) {
+                $validation->validationErrors[] = 'Password must be between 8 and 50 characters long.';
+            } else {
+                $user->setHash($this->hash->make($newPassword));
+            }
+        }
 
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));
@@ -136,10 +148,10 @@ class UserController extends Controller
             $user->setFullname($fullname);
             $user->setAddress($address);
             $user->setPostcode($postcode);
-            print_r($updateAccountNumber);
-            if($updateAccountNumber){
+
+            if ($updateAccountNumber)
                 $user->setAccountNumber($accountNumber);
-                print_r("UPDAtING ACOC NOPERS");}
+
             $this->userRepository->save($user);
             $this->auth->user = $user;
             $this->app->flashNow('info', 'Your profile was successfully saved.');

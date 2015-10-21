@@ -2,3 +2,5 @@ app.db
 composer.phar
 vendor
 log/*.log
+bin/
+web.config

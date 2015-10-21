@@ -25,6 +25,12 @@
         <label>Email:</label>
         <input type="email" name="email" value="{{ user.email|escape }}"> <br />
 
+        <label>Old password:</label>
+        <input type = "password" name="old_password"> <br />
+
+        <label>New password:</label>
+        <input type = "password" name="new_password"> <br />
+
         <label>Bio:</label>
         <textarea name="bio">{{ user.bio|escape }}</textarea>
 
