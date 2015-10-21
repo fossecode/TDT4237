@@ -153,14 +153,12 @@ class UserRepository
     }
 
     public static function encrypt($key, $decrypted){
-        $methods = openssl_get_cipher_methods();
-        return openssl_encrypt($decrypted, $methods[0], $key);
+        return openssl_encrypt($decrypted, 'AES-128-CBC', $key);
     }
 
     public static function decrypt($key, $encrypted){
-        $methods = openssl_get_cipher_methods();
         if ($encrypted)
-            return openssl_decrypt($encrypted, $methods[0], $key);
+            return openssl_decrypt($encrypted, 'AES-128-CBC', $key);
         else 
             return "";
     }
