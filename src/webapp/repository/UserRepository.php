@@ -153,15 +153,14 @@ class UserRepository
     }
 
     public static function encrypt($key, $decrypted){
-
-        return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $decrypted, MCRYPT_MODE_CBC, md5(md5($key))));   
-    
+        $methods = openssl_get_cipher_methods();
+        return openssl_encrypt($decrypted, $methods[0], $key);
     }
 
     public static function decrypt($key, $encrypted){
-
-        if($encrypted)
-            return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($encrypted), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
+        $methods = openssl_get_cipher_methods();
+        if ($encrypted)
+            return openssl_decrypt($encrypted, $methods[0], $key);
         else 
             return "";
     }
