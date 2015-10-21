@@ -11,8 +11,7 @@
     "require": {
         "slim/slim": "2.*",
         "slim/views": "0.1.*",
-        "twig/twig": "1.16.*",
-        "slim/logger": "0.1.*"
+        "twig/twig": "1.16.*"
 
     },
     "autoload": {

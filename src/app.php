@@ -13,6 +13,8 @@ use tdt4237\webapp\repository\ThrottleRepository;
 use tdt4237\webapp\repository\PaymentRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/webapp/Logger.php';
+use \Slim\Logger\DateTimeFileWriter;
 
 chdir(__DIR__ . '/../');
 chmod(__DIR__ . '/../web/uploads', 0700);
@@ -22,6 +24,7 @@ if (++$_SESSION['request_counter'] >= 20) {
     $_SESSION['request_counter'] = 0;
     session_regenerate_id(true);
 }
+
 $app = new Slim([
     'templates.path' => __DIR__.'/webapp/templates/',
     'debug' => false,
@@ -30,7 +33,7 @@ $app = new Slim([
     'log.level' => \Slim\Log::DEBUG,
     'log.writer' => new \Slim\Logger\DateTimeFileWriter(array(
         'path' => realpath(dirname(dirname(__FILE__))) . '/log',
-        'name_format' => 'Y-m-d H:i:s',
+        'name_format' => 'Y-m-d',
         'message_format' => '%label% - %date% - %message%'
     ))
 ]);
