@@ -25,9 +25,15 @@ if (++$_SESSION['request_counter'] >= 20) {
 
 $app = new Slim([
     'templates.path' => __DIR__.'/webapp/templates/',
-    'debug' => true,
-    'view' => new Twig()
-
+    'debug' => false,
+    'view' => new Twig(),
+    'log.enabled' => true,
+    'log.level' => \Slim\Log::DEBUG,
+    'log.writer' => new \Slim\Logger\DateTimeFileWriter(array(
+        'path' => '/Users/michaelmcmillan/Prosjekter/TDT4237/log',
+        'name_format' => 'Y-m-d H:i:s',
+        'message_format' => '%label% - %date% - %message%'
+    ))
 ]);
 
 $view = $app->view();
@@ -104,6 +110,14 @@ $app->get('/admin/delete/:userId', $ns . 'AdminController:delete');
 $app->get('/admin/makeDoctor/:userId', $ns . 'AdminController:makeDoctor');
 $app->get('/admin/removeDoctor/:userId', $ns . 'AdminController:removeDoctor');
 
+$app->hook('slim.after.router', function () use ($app) {
+    $request  = $app->request;
+    $response = $app->response;
+    try {
+        $app->log->debug('IP: '.$request->getIp().' UA: '.$request->getUserAgent().' Path: '.$request->getResourceUri());
+    } catch (Exception $e) {
 
+    }
+});
 
 return $app;
