@@ -42,6 +42,7 @@ class UserRepository
         $decryptedAccountNumber = self::decrypt("brannmann2",$row['accountNumber']); 
         $user->setAccountNumber($decryptedAccountNumber);
 
+
         if (!empty($row['email'])) {
             $user->setEmail(new Email($row['email']));
         }
@@ -153,13 +154,16 @@ class UserRepository
 
     public static function encrypt($key, $decrypted){
 
-        return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $string, MCRYPT_MODE_CBC, md5(md5($key))));   
-        
+        return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $decrypted, MCRYPT_MODE_CBC, md5(md5($key))));   
+    
     }
 
     public static function decrypt($key, $encrypted){
 
-        return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($encrypted), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
-
+        if($encrypted)
+            return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($encrypted), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
+        else 
+            return "";
     }
+
 }

@@ -27,7 +27,7 @@ if (++$_SESSION['request_counter'] >= 20) {
 
 $app = new Slim([
     'templates.path' => __DIR__.'/webapp/templates/',
-    'debug' => false,
+    'debug' => true,
     'view' => new Twig(),
     'log.enabled' => true,
     'log.level' => \Slim\Log::DEBUG,
@@ -42,6 +42,16 @@ $view = $app->view();
 $view->parserExtensions = array(
     new TwigExtension(),
 );
+
+$twig = $view->getInstance();
+$twig->addFilter(
+    new Twig_SimpleFilter('obfuscateAccountNumber', function ($number){
+        if(!$number)
+            return "";
+        return "*******" . substr($number,7);
+    })
+    );
+
 
 try {
     // Create (connect to) SQLite database in file
