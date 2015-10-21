@@ -38,7 +38,11 @@ class AdminController extends Controller
             $csrfToken = $this->app->request->get("token");
             $validation = new Validation($csrfToken);
             if($validation->isGoodToGo()){
-                if ($this->userRepository->deleteByUserId($userId)) {
+                if ($this->userRepository->findByUserId($userId)->isAdmin()){
+                    $this->app->flash('info', "You can not delete an administrator.");
+                    $this->app->redirect('/admin');
+                    return;
+                } else if ($this->userRepository->deleteByUserId($userId)) {
                     $this->app->flash('info', "Sucessfully deleted user.");
                     $this->app->redirect('/admin');
                     return;

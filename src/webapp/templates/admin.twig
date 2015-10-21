@@ -19,7 +19,9 @@
             {% else %}
             <td><a href="/admin/removeDoctor/{{ user.userid|escape }}?token={{ csrf }}">Remove doctor status</a></td>
             {% endif %}
+            {% if not user.isAdmin %}
             <td><a href="/admin/delete/{{ user.userid|escape }}?token={{ csrf }}">Delete this user</a></td>
+            {% endif %}
         </tr>
     {% endfor %}
     </table>
