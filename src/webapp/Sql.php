@@ -38,12 +38,13 @@ class Sql
 
     static function insertDummyUsers()
     {
+        $hash1 = Hash::make('dolanduck');
+        $hash2 = Hash::make('Testuser123');
 
-        $hash5 = Hash::make('Testuser123');
+        $q4 = "INSERT INTO users(username, password, isadmin, fullname, address, postcode) VALUES ('admin', '$hash1', 1, 'Admin', 'Admin street 1337', '1337')";
+        $q5 = "INSERT INTO users(username, password, isadmin, fullname, address, postcode) VALUES ('testuser', '$hash2', 1, 'Testuser', 'Test Street 1337', '1337')";
 
-        
-        $q5 = "INSERT INTO users(username, password, isadmin, fullname, address, postcode) VALUES ('testuser', '$hash5', 1, 'Testuser', 'Test Street 1337', '1337')";
-
+        self::$pdo->exec($q4);
         self::$pdo->exec($q5);
 
 
@@ -51,8 +52,8 @@ class Sql
     }
 
     static function insertPosts() {
-        $q4 = "INSERT INTO posts(userId, timestamp, title, content) VALUES (2, '2015-03-05 12:05:00', 'I have a problem', 'I have a generic problem I think its embarrasing to talk about. Someone help?')";
-        $q5 = "INSERT INTO posts(userId, timestamp, title, content) VALUES (3, '2015-03-04 13:10:00', 'I also have a problem', 'I generally fear very much for my health')";
+        $q4 = "INSERT INTO posts(userId, timestamp, title, content) VALUES (1, '2015-03-05 12:05:00', 'I have a problem', 'I have a generic problem I think its embarrasing to talk about. Someone help?')";
+        $q5 = "INSERT INTO posts(userId, timestamp, title, content) VALUES (2, '2015-03-04 13:10:00', 'I also have a problem', 'I generally fear very much for my health')";
 
         self::$pdo->exec($q4);
         self::$pdo->exec($q5);
@@ -61,8 +62,8 @@ class Sql
     }
 
     static function insertComments() {
-        $q1 = "INSERT INTO comments(userId, timestamp, text, postId) VALUES (3, '2015-03-05 12:05:00', 'Don''t be shy! No reason to be afraid here',0)";
-        $q2 = "INSERT INTO comments(userId, timestamp, text, postId) VALUES (2, '2015-03-05 12:05:00', 'I wouldn''t worry too much, really. Just relax!',1)";
+        $q1 = "INSERT INTO comments(userId, timestamp, text, postId) VALUES (2, '2015-03-05 12:05:00', 'Don''t be shy! No reason to be afraid here',0)";
+        $q2 = "INSERT INTO comments(userId, timestamp, text, postId) VALUES (1, '2015-03-05 12:05:00', 'I wouldn''t worry too much, really. Just relax!',1)";
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);
         print "[tdt4237] Done inserting comments.".PHP_EOL;
