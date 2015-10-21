@@ -13,6 +13,8 @@ use tdt4237\webapp\repository\ThrottleRepository;
 use tdt4237\webapp\repository\PaymentRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/Logger.php';
+use \Slim\Logger\DateTimeFileWriter;
 
 chdir(__DIR__ . '/../');
 chmod(__DIR__ . '/../web/uploads', 0700);
