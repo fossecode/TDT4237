@@ -24,6 +24,7 @@ if (++$_SESSION['request_counter'] >= 20) {
     $_SESSION['request_counter'] = 0;
     session_regenerate_id(true);
 }
+
 $app = new Slim([
     'templates.path' => __DIR__.'/webapp/templates/',
     'debug' => false,
