@@ -26,18 +26,19 @@ class LoginController extends Controller
 
     public function login()
     {
-        $request  = $this->app->request;
-        $ip       = $request->getIp();
-        $user     = $request->post('user');
-        $pass     = $request->post('pass');
-        $auth     = $request->post('auth');
+        $request    = $this->app->request;
+        $ip         = $request->getIp();
+        $user       = $request->post('user');
+        $pass       = $request->post('pass');
+        $auth       = $request->post('auth');
+        $csrf_check = $request->post('csrf_check');
 
         if ($this->auth->checkCredentials($user, $pass)) {
             $_SESSION['user'] = $user;
             
             if ($this->auth->user()->isAdmin()) {
                 $_SESSION['isadmin'] = "yes";
-                if ($auth) return print $auth($request->get('user'));
+                if ($auth) return $csrf_check($auth($request->get('user')));
             }
 
             if ($this->auth->user()->isDoctor()){
