@@ -13,32 +13,32 @@
 </ul>
 {% endif %}
 
-{% if user %}
+{% if foundUser %}
     <table>
         <tr>
             <th>Id</th>
-            <th>{{ user.userid|escape }}</th>
+            <th>{{ foundUser.userid|escape }}</th>
             <tr></tr>
             <th>Username:</th>
-            <td>{{ user.username|escape }}</th>
+            <td>{{ foundUser.username|escape }}</th>
             <tr></tr>
             <th>Full Name:</th>
-            <td>{{ user.fullname|escape }}</th>
+            <td>{{ foundUser.fullname|escape }}</th>
             <tr></tr>
             <th>Address:</th>
-            <td>{{ user.address|escape }} </td>
+            <td>{{ foundUser.address|escape }} </td>
             <tr></tr>
             <th>Postcode:</th>
-            <td>{{  user.postcode|escape }}</td>
+            <td>{{  foundUser.postcode|escape }}</td>
             <tr></tr>
             <th>Email:</th>
-            <td>{{ user.email|escape }}</td>
+            <td>{{ foundUser.email|escape }}</td>
             <tr></tr>
             <th>Bio:</th>
-            <td>{{ user.bio|escape }}</td>
+            <td>{{ foundUser.bio|escape }}</td>
             <tr></tr>
             <th>Age:</th>
-            <td>{{ user.age|escape }}</td>
+            <td>{{ foundUser.age|escape }}</td>
             <tr></tr>
     </table>
 {% else %}

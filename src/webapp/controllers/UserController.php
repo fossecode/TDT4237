@@ -88,13 +88,13 @@ class UserController extends Controller
         if ($user != false && $user->getUsername() == $this->auth->getUsername()) {
 
             $this->render('showuser.twig', [
-                'user' => $user,
+                'foundUser' => $user,
                 'username' => $user->getUsername()
             ]);
         } else if ($this->auth->check()) {
 
             $this->render('showuserlite.twig', [
-                'user' => $user,
+                'foundUser' => $user,
                 'username' => $user->getUsername()
             ]);
         }
