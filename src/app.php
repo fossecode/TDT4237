@@ -70,6 +70,7 @@ try {
 }
 
 # Fire up the WAF 
+/*
 $bannedRepository = new BannedRepository($app->db); 
 $ip               = $_SERVER['REMOTE_ADDR'];
 $request          = urldecode(implode($_POST, ' ') . $_SERVER['REQUEST_URI']);
@@ -80,6 +81,7 @@ if ($waf->isMalicious($request))
 
 if ($bannedRepository->findByIp($ip))
     die($waf->getBanMessage());
+ */
 
 // Wire together dependencies
 
