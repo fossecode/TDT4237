@@ -19,8 +19,7 @@ class WAF {
         return
             "We have detected malicious activity from this IP address.\n\n"            .
             "As a counter-measure we have decided to ban you from this application.\n" .
-            "We appreciate your understanding and cooperation.\n"                      .
-            "Best regards, group 10!";
+            "We appreciate your understanding and cooperation.";
     }
 
     public function containsSqlInjection($user_input) {
