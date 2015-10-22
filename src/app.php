@@ -33,7 +33,7 @@ if (++$_SESSION['request_counter'] >= 20) {
 
 $app = new Slim([
     'templates.path' => __DIR__.'/webapp/templates/',
-    'debug' => true,
+    'debug' => false,
     'view' => new Twig(),
     'log.enabled' => true,
     'log.level' => \Slim\Log::DEBUG,
