@@ -6,7 +6,7 @@ class Client {
     public $ip;
     public $request;
 
-    public function __construct($ip, $request) {
+    public function __construct($ip, $request = '') {
         $this->ip      = $ip;
         $this->request = $request;
     }
