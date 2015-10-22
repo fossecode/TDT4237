@@ -1,16 +1,16 @@
 <?php
 namespace tdt4237\webapp\repository;
 
+require dirname('.').'/src/webapp/repository/RepositoryInterface.php';
+
 use PDO;
 use tdt4237\webapp\models\ThrottleEntry;
 use tdt4237\webapp\repository\RepositoryInterface;
-use tdt4237\webapp\WAF;
-use tdt4237\webapp\Client;
 
-class ThrottleRepository implements RepositoryInterface
+class BannedRepository implements RepositoryInterface
 {
     const INSERT_QUERY = "INSERT INTO banned(ip) VALUES(?)";
-    const FIND_ALL = "SELECT * FROM banned";
+    const FIND_BY_IP = "SELECT * FROM banned WHERE ip = ?";
 
     /**
      * @var PDO
@@ -26,11 +26,6 @@ class ThrottleRepository implements RepositoryInterface
     public function save($bannedEntry) { }
     public function remove($id) { }
 
-    public function makeBannedEntryFromRow(array $row)
-    {
-        return new Client($row['ip']);
-    }
-
     public function findAll()
     {
         $stmt = $this->pdo->prepare(self::FIND_ALL);
@@ -39,14 +34,21 @@ class ThrottleRepository implements RepositoryInterface
         if (!$rows)
             return [];
         else 
-            return array_map([$this, 'makeBannedEntryFromRow'], $rows);
+            return $rows;
     }
 
-    public function saveNewEntry(Client $bannedEntry)
+    public function findByIp($ip)
+    {
+        $stmt = $this->pdo->prepare(self::FIND_BY_IP);
+        $stmt->execute(array($ip));
+        return $stmt->fetchAll();
+    }
+
+    public function saveNewEntry($ip)
     {
         $stmt = $this->pdo->prepare(self::INSERT_QUERY);
         return $stmt->execute(array(
-            $bannedEntry->ip,
+            $ip,
         ));
     }
 }

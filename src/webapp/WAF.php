@@ -2,25 +2,13 @@
 
 namespace tdt4237\webapp;
 
-class Client {
-    public $ip;
-    public $request;
-
-    public function __construct($ip, $request = '') {
-        $this->ip      = $ip;
-        $this->request = $request;
-    }
-}
-
 class WAF {
 
     protected $banMessage;
     protected $allowedHTMLTagNames;
-    protected $prisoners;
     
-    public function __construct ($prisoners = array()) {
+    public function __construct () {
         $this->banMessage = $this->getBanMessage();
-        $this->prisoners = $prisoners;
         $this->allowedHTMLTagNames = [
             'b', 'strong', 'h1', 'p',
             'h2,', 'h3', 'h4', 'h5'
@@ -35,14 +23,6 @@ class WAF {
             "Best regards, group 10!";
     }
 
-    public function getPrisoners() {
-        return $this->prisoners;
-    }
-
-    public function throwInJail($client) {
-        $this->prisoners[] = $client;
-    }
-
     public function containsSqlInjection($user_input) {
         return (bool) (
             stristr($user_input, '\'--')      || 
@@ -52,13 +32,6 @@ class WAF {
             stristr($user_input, 'UNION ALL') ||
             stristr($user_input, 'OR 1=1')
         );
-    }
-
-    public function isIPInJail($ip) {
-        foreach ($this->getPrisoners() as $prisoner)
-            if ($prisoner->ip == $ip)
-                return true;
-        return false;
     }
 
     public function getAllowableTags() {

@@ -16,6 +16,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/webapp/Logger.php';
 use \Slim\Logger\DateTimeFileWriter;
 
+require_once dirname('.').'/src/webapp/WAF.php';
+use tdt4237\webapp\WAF;
+
+require dirname('.').'/src/webapp/repository/BannedRepository.php';
+use tdt4237\webapp\repository\BannedRepository;
+
 chdir(__DIR__ . '/../');
 chmod(__DIR__ . '/../web/uploads', 0700);
 
@@ -62,6 +68,18 @@ try {
     echo $e->getMessage();
     exit();
 }
+
+# Fire up the WAF 
+$bannedRepository = new BannedRepository($app->db); 
+$ip               = $_SERVER['REMOTE_ADDR'];
+$request          = implode($_POST, ' ') . $_SERVER['REQUEST_URI'];
+$waf              = new Waf();
+
+if ($waf->isMalicious($request))
+    $bannedRepository->saveNewEntry($ip);
+
+if ($bannedRepository->findByIp($ip))
+    die('u are banned :(');
 
 // Wire together dependencies
 
