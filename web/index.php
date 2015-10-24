@@ -4,7 +4,7 @@ error_reporting(0);
 ini_set('display_errors', 'off');
 ini_set('session.cookie_httponly', 1);
 
-require dirname('.').'/src/webapp/HarmlessPathFilter.php';
+require __DIR__ . '/../src/webapp/HarmlessPathFilter.php';
 use tdt4237\webapp\HarmlessPathFilter;
 
 if (! extension_loaded('openssl')) {
