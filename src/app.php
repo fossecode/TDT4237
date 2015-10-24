@@ -32,7 +32,7 @@ $app = new Slim([
     'log.enabled' => true,
     'log.level' => \Slim\Log::DEBUG,
     'log.writer' => new \Slim\Logger\DateTimeFileWriter(array(
-        'path' => realpath(dirname(dirname(__FILE__))) . '/log',
+        'path' => realpath(__DIR__ . '/../log'),
         'name_format' => 'Y-m-d',
         'message_format' => '%label% - %date% - %message%'
     ))
